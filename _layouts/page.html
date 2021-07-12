@@ -72,7 +72,7 @@ D('comment').outerHTML = `<div id="comment" class="fb-comments" data-href="${win
 
 // add base URL to relative links (for project pages)
 var relativelinks = document.getElementsByTagName("a");
-let baseURL = "/Chipingai" + window.location.pathname.split('/')[1];
+let baseURL = "/Chipingai.github.io" + window.location.pathname.split('/')[1];
 if (baseURL.slice(0, 3) != "/20") {
 	for (let i = 0; i < relativelinks.length; i++) {
 		if (relativelinks[i].pathname.slice(0, 3) == "/20") {	
