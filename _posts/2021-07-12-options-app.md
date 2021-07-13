@@ -10,7 +10,7 @@
   
   function within_two_weeks(unix_time) {
     let now = Date.now();
-    return (unix_time - now/1000 < 16*24*60*60);
+    return (unix_time - now/1000 < 17*24*60*60);
   }
   
   var allData = {};
@@ -29,12 +29,18 @@
       console.log(allData[option_symbols[i]][0]);
                                             
       let myExpirations = [];
-      for (let j = 0; j < allData[option_symbols[i]][0].expirationDates.length; j++) {
-        if (within_two_weeks(allData[option_symbols[i]][0].expirationDates[j])) 
-          myExpirations.push(allData[option_symbols[i]][0].expirationDates[j]);
+      for (let j = 1; j < allData[option_symbols[i]][0].expirationDates.length; j++) {
+        if (within_two_weeks(allData[option_symbols[i]][0].expirationDates[j])) {
+          fetch("https://ansyble.herokuapp.com/cors/", 
+                {headers: {'Target-URL':base_url + option_symbols[i] + "?date=" + allData[option_symbols[i]][0].expirationDates[j]}, 
+                cache:'no-cache'}).then(function(response) {
+            return response.json();
+          }).then(function(remainingData) {
+            allData[option_symbols[i]].push(remainingData.optionChain.result[0]);
+            console.log(allData[option_symbols[i]][j]);
+          });
+        }                                                                  
       }
-      console.log(myExpirations);
-      expirations.push(myExpirations);      
     });
   }
   
