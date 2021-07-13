@@ -13,7 +13,7 @@
     return (unix_time - now/1000 < 16*24*60*60);
   }
   
-  var data = {};
+  var allData = {};
                                                
   var expirations = [];
   var option_symbols = ['AAPL', 'GOOGL'];
@@ -21,17 +21,17 @@
   
   for (let i = 0; i < option_symbols.length; i++) {
   
-    data[option_symbols[i]] = [];
+    allData[option_symbols[i]] = [];
     fetch("https://ansyble.herokuapp.com/cors/", {headers: {'Target-URL':base_url + option_symbols[i]}, cache:'no-cache'}).then(function(response) {
       return response.json();
     }).then(function(data) {
-      data[option_symbols[i]].push(data.optionChain.result[0]);
-      console.log(data[option_symbols[i]][0]);
+      allData[option_symbols[i]].push(data.optionChain.result[0]);
+      console.log(allData[option_symbols[i]][0]);
                                             
       let myExpirations = [];
-      for (let j = 0; j < data[option_symbols[i]][0].expirationDates.length; j++) {
-        if (within_two_weeks(data[option_symbols[i]][0].expirationDates[j])) 
-          myExpirations.push(data[option_symbols[i]][0].expirationDates[j]);
+      for (let j = 0; j < allData[option_symbols[i]][0].expirationDates.length; j++) {
+        if (within_two_weeks(allData[option_symbols[i]][0].expirationDates[j])) 
+          myExpirations.push(allData[option_symbols[i]][0].expirationDates[j]);
       }
       console.log(myExpirations);
       expirations.push(myExpirations);      
