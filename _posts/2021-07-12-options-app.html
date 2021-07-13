@@ -16,6 +16,7 @@
   var allData = {};
   var filterData = [];
   var record = [];
+  var recordLength = 5;
   var price = 0;
   var strike = 0;
   
@@ -34,7 +35,7 @@ for (let i = 0; i < option_symbols.length; i++) {
           return response.json();
       }).then(function(data) {
           allData[option_symbols[i]].push(data.optionChain.result[0]);
-          console.log(allData[option_symbols[i]][0]);
+          //console.log(allData[option_symbols[i]][0]);
 
           let promises2 = [];
           for (let j = 1; j < allData[option_symbols[i]][0].expirationDates.length; j++) {
@@ -46,7 +47,7 @@ for (let i = 0; i < option_symbols.length; i++) {
                         return response.json();
                     }).then(function(remainingData) {
                         allData[option_symbols[i]].push(remainingData.optionChain.result[0]);
-                        console.log(allData[option_symbols[i]][j]);
+                        //console.log(allData[option_symbols[i]][j]);
                     })
                  );
               }                                                                  
@@ -76,7 +77,7 @@ Promise.all(promises).then(function() {
           filterData.push(record);
           recordSize++
         }
-        console.log("symbol : " + symbol + "call record size = " + recordSize);
+        //console.log("symbol : " + symbol + ", call record size = " + recordSize);
         
         record = [];
         recordSize = 0;
@@ -89,10 +90,14 @@ Promise.all(promises).then(function() {
           filterData.push(record);
           recordSize++;
         }
-        console.log("symbol : " + symbol + "put record size = " + recordSize);
+        //console.log("symbol : " + symbol + ", put record size = " + recordSize);
       }
     }
- });
+    
+    
+
+ 
+ 
  
 for(let i = 0; i < filterData.length; i++) {
 
@@ -119,6 +124,8 @@ li.appendChild(third);
 
 document.getElementById('list').appendChild(li);
 }
-  
+
+ });
+    
                                                                  
 </script>
