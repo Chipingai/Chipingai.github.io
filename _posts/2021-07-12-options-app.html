@@ -19,6 +19,7 @@
   
     allData[option_symbols[i]] = [];
     fetch("https://ansyble.herokuapp.com/cors/", {headers: {'Target-URL':base_url + option_symbols[i]}, cache:'no-cache'}).then(function(response) {
+      console.log(base_url + option_symbols[i])
       return response.json();
     }).then(function(data) {
       allData[option_symbols[i]].push(data.optionChain.result[0]);
