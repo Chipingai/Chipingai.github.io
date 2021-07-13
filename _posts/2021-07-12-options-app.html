@@ -37,8 +37,11 @@ for (let i = 0; i < option_symbols.length; i++) {
     });
 }
     
-for (let symbol in allData) {
-  console.log(allData[symbol][0].quote.regularMarketPrice);        
-}                                                     
+  
+  setTimeout(function() {
+  for (let symbol in allData) {
+    console.log(allData[symbol][0].quote.regularMarketPrice);        
+  }            
+  }, 3000);                                        
                                                                  
 </script>
