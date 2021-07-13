@@ -7,7 +7,7 @@
 
 <script>
   
-  expiration_day_num = 17
+  var expiration_day_num = 17
   function within_two_weeks(unix_time) {
     let now = Date.now();
     return (unix_time - now/1000 < expiration_day_num*24*60*60);
