@@ -46,7 +46,7 @@ for (let i = 0; i < option_symbols.length; i++) {
 
  Promise.all(promises).then(function() {
     for (let symbol in allData) {
-      console.log(allData[symbol][0].quote.regularMarketPrice);        
+      console.log(allData[symbol][1].quote.regularMarketPrice);        
     }           
  });
                                                                  
