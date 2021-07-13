@@ -47,8 +47,11 @@ for (let i = 0; i < option_symbols.length; i++) {
 
  Promise.all(promises).then(function() {
     for (let symbol in allData) {
+      console.log(symbol + ":");
+      console.log(allData[symbol][0].options[0].calls.length); 
+      console.log(allData[symbol][0].strikes.length);
       console.log(allData[symbol][1].quote.regularMarketPrice);        
-    }           
- });
+    }
+ );
                                                                  
 </script>
