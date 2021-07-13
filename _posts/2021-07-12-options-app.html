@@ -3,19 +3,30 @@
 </div>
 <script>
   
-
   function within_two_weeks(unix_time) {
     let now = Date.now();
     return (unix_time - now/1000 < 15*24*60*60);
   }
+  
+  function date_diff(unix_time) {
+    let now = Date.now();
+    return (Math.floor((unix_time - now/1000)/(24*60*60)) + 1);
+  }
 
   var allData = {};
+  var filterData = [];
+  var record = [];
+  var price = 0;
+  var strike = 0;
+  
                          
-  var option_symbols = ['aapl', 'googl'];
+  var option_symbols = ['mrvl', 'intc'];
   var base_url = 'https://query2.finance.yahoo.com/v7/finance/options/';
   
-  var promises = [];
+  var promises = [];  
   
+  
+//******* Fetch data *****
 for (let i = 0; i < option_symbols.length; i++) {
     allData[option_symbols[i]] = [];
     promises.push (  
@@ -45,13 +56,69 @@ for (let i = 0; i < option_symbols.length; i++) {
     );
 }
 
- Promise.all(promises).then(function() {
-    for (let symbol in allData) {
-      console.log(symbol + ":");
-      console.log(allData[symbol][0].options[0].calls.length); 
-      console.log(allData[symbol][0].strikes.length);
-      console.log(allData[symbol][1].quote.regularMarketPrice);
+
+//***** Creatye filter daa *****
+var recordSize = 0
+Promise.all(promises).then(function() {  
+    for (let symbol in allData) {   	
+      price = allData[symbol][0].quote.regularMarketPrice; 
+    	for(var week=0;week<allData[symbol].length;week++){   	
+        console.log("expiration week : " , week+1);
+        dateDiff = date_diff(allData[symbol][week].options[0].calls[0].expiration);
+        record = [];
+        recordSize = 0;
+        for(var call=0;call<allData[symbol][week].options[0].calls.length;call++){	
+        	record.push(symbol);
+          record.push(price);
+          record.push(allData[symbol][week].options[0].calls[call].strike);
+          record.push(allData[symbol][week].options[0].calls[call].lastPrice);
+          record.push('call');
+          filterData.push(record);
+          recordSize++
+        }
+        console.log("symbol : " + symbol + "call record size = " + recordSize);
+        
+        record = [];
+        recordSize = 0;
+        for(var put=0;put<allData[symbol][week].options[0].puts.length;put++){
+        	record.push(symbol);
+          record.push(price);
+          record.push(allData[symbol][week].options[0].puts[call].strike);
+          record.push(allData[symbol][week].options[0].puts[call].lastPrice);
+          record.push('put')
+          filterData.push(record);
+          recordSize++;
+        }
+        console.log("symbol : " + symbol + "put record size = " + recordSize);
+      }
     }
-    });
+ });
+ 
+for(let i = 0; i < filterData.length; i++) {
+
+let first = document.createElement('span');
+let second = document.createElement('span');
+let third = document.createElement('span');
+
+first.style.display = "inline-block";
+second.style.display = "inline-block";
+third.style.display = "inline-block";
+
+first.style.width = "100px";
+second.style.width = "100px";
+third.style.width = "100px";
+
+first.textContent = filterData[i][0];
+second.textContent = filterData[i][1];
+third.textContent = filterData[i][2];
+
+let li = document.createElement("li");
+li.appendChild(first);
+li.appendChild(second);
+li.appendChild(third);
+
+document.getElementById('list').appendChild(li);
+}
+  
                                                                  
 </script>
