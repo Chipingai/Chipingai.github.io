@@ -35,7 +35,7 @@
 		</div>
 						
 		<ul class="ulsidebar" id="postlist" style="overflow:auto;">
-			{% for post in site.posts reverse %}					
+			{% for post in site.posts reversed %}					
 				{% if page.title == post.title %}	
 					<li id="specialPost" style="background-color:#f4f7f7"><span class="date-format">{{ post.date | date: "%B %-d, %Y" }}</span><br>
 						{{ post.title }}</li>
