@@ -14,7 +14,7 @@
   var option_symbols = ['aapl', 'googl'];
   var base_url = 'https://query2.finance.yahoo.com/v7/finance/options/';
   
-  let promises = [];
+  var promises = [];
   
 for (let i = 0; i < option_symbols.length; i++) {
     allData[option_symbols[i]] = [];
@@ -44,7 +44,7 @@ for (let i = 0; i < option_symbols.length; i++) {
     );
 }
 
- Promises.all(promises).then(function() {
+ Promise.all(promises).then(function() {
     for (let symbol in allData) {
       console.log(allData[symbol][0].quote.regularMarketPrice);        
     }           
