@@ -13,13 +13,11 @@
     return (unix_time - now/1000 < 16*24*60*60);
   }
   
-  let data = {};
+  var data = {};
                                                
-  let expirations = [];
-  
-  let first_run_data = [];
-  let option_symbols = ['AAPL', 'GOOGL'];
-  let base_url = 'https://query1.finance.yahoo.com/v7/finance/options/';
+  var expirations = [];
+  var option_symbols = ['AAPL', 'GOOGL'];
+  var base_url = 'https://query1.finance.yahoo.com/v7/finance/options/';
   
   for (let i = 0; i < option_symbols.length; i++) {
   
