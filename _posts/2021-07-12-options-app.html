@@ -10,39 +10,35 @@
   }
 
   var allData = {};
-                                               
-  var expirations = [];
+                         
   var option_symbols = ['aapl', 'googl'];
   var base_url = 'https://query2.finance.yahoo.com/v7/finance/options/';
   
-  for (let i = 0; i < option_symbols.length; i++) {
-  
+for (let i = 0; i < option_symbols.length; i++) {
     allData[option_symbols[i]] = [];
     fetch("https://ansyble.herokuapp.com/cors/", {headers: {'Target-URL':base_url + option_symbols[i]}, cache:'no-cache'}).then(function(response) {
-      return response.json();
+        return response.json();
     }).then(function(data) {
-      allData[option_symbols[i]].push(data.optionChain.result[0]);
-      console.log(allData[option_symbols[i]][0]);
-                                            
-      let myExpirations = [];
-      for (let j = 1; j < allData[option_symbols[i]][0].expirationDates.length; j++) {
-        if (within_two_weeks(allData[option_symbols[i]][0].expirationDates[j])) {
-          fetch("https://ansyble.herokuapp.com/cors/", 
+        allData[option_symbols[i]].push(data.optionChain.result[0]);
+        console.log(allData[option_symbols[i]][0]);
+
+        for (let j = 1; j < allData[option_symbols[i]][0].expirationDates.length; j++) {
+            if (within_two_weeks(allData[option_symbols[i]][0].expirationDates[j])) {
+                fetch("https://ansyble.herokuapp.com/cors/", 
                 {headers: {'Target-URL':base_url + option_symbols[i] + "?date=" + allData[option_symbols[i]][0].expirationDates[j]}, 
                 cache:'no-cache'}).then(function(response) {
-            return response.json();
-          }).then(function(remainingData) {
-            allData[option_symbols[i]].push(remainingData.optionChain.result[0]);
-            console.log(allData[option_symbols[i]][j]);
-          });
-        }                                                                  
-      }
+                    return response.json();
+                }).then(function(remainingData) {
+                    allData[option_symbols[i]].push(remainingData.optionChain.result[0]);
+                    console.log(allData[option_symbols[i]][j]);
+                });
+            }                                                                  
+        }
     });
-  }
-  
-  for (const symbol in allData) {
-  console.log(allData[symbol][0].quote.regularMarketPrice);
 }
-                                                                 
+    
+for (const symbol in allData) {
+  console.log(allData[symbol][0].quote.regularMarketPrice);        
+}                                                     
                                                                  
 </script>
