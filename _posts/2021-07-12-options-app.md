@@ -9,7 +9,9 @@
   
   
   function within_two_weeks(unix_time) {
-    let now = Date.now();
+    let now = new Date.now();
+    console.log("Now: " + now);
+    console.log("Unix time: " + unix_time);
     return (unix_time - now < 16*24*60*60*1000);
   }
   
