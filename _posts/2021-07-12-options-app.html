@@ -63,7 +63,7 @@ for (let i = 0; i < option_symbols.length; i++) {
 
 
 
-//***** Create filter daa *****
+//***** Create filter data *****
 var recordSize = 0;
 var distance = 0;
 var aprReturn = 0;
@@ -78,6 +78,7 @@ Promise.all(promises).then(function() {
       price = allData[symbol][0].quote.regularMarketPrice; 
     	for(var week=0;week<allData[symbol].length;week++){   	
         dateDiff = date_diff(allData[symbol][week].options[0].calls[0].expiration);
+        console.log('dataDiff=",dateDiff)
         recordSize = 0;
         for(var call=0;call<allData[symbol][week].options[0].calls.length;call++){
         	record = [];
