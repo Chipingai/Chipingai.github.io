@@ -1,5 +1,5 @@
 <div>
-  <ol id="list"><li><span style="width:100px; display:inline-block;">Symbol</span><span style="width:100px; display:inline-block;">Price</span><span style="width:100px; display:inline-block;">Strike</span><span style="width:100px; display:inline-block;">lastPrice</span><span style="width:100px; display:inline-block;">style</span>
+  <ol id="list"><li><span style="width:100px; display:inline-block;">Symbol</span><span style="width:100px; display:inline-block;">Price</span><span style="width:100px; display:inline-block;">Strike</span><span style="width:100px; display:inline-block;">lastPrice</span><span style="width:100px; display:inline-block;">style</span><span style="width:100px; display:inline-block;">Distance</span><span style="width:100px; display:inline-block;">Return</span>
 </li></ol>
 
 </div>
@@ -60,29 +60,38 @@ for (let i = 0; i < option_symbols.length; i++) {
 }
 
 
-//***** Creatye filter daa *****
-var recordSize = 0
+//***** Create filter daa *****
+var recordSize = 0;
+var distance = 0;
+var aprReturn = 0;
 Promise.all(promises).then(function() {  
     for (let symbol in allData) {   	
       price = allData[symbol][0].quote.regularMarketPrice; 
     	for(var week=0;week<allData[symbol].length;week++){   	
         console.log("expiration week : " , week+1);
         dateDiff = date_diff(allData[symbol][week].options[0].calls[0].expiration);
-        
         recordSize = 0;
-        for(var call=0;call<allData[symbol][week].options[0].calls.length;call++){	
-          record = [];
+        for(var call=0;call<allData[symbol][week].options[0].calls.length;call++){
+        	record = [];
         	record.push(symbol);
           record.push(price);
           record.push(allData[symbol][week].options[0].calls[call].strike);
           record.push(allData[symbol][week].options[0].calls[call].lastPrice);
           record.push('call');
+          distance = ((allData[symbol][week].options[0].calls[call].strike-price)/price)*100;
+          distance = distance.toFixed(2);
+          record.push(distance);
+          
+          aprReturn = (((allData[symbol][week].options[0].calls[call].lastPrice/allData[symbol][week].options[0].calls[call].strike)/dateDiff)*250)*100;
+          aprReturn = aprReturn.toFixed(2);
+          record.push(aprReturn);
+          
           filterData.push(record);
           recordSize++
+          console.log(distance,aprReturn,dateDiff)
         }
         //console.log("symbol : " + symbol + ", call record size = " + recordSize);
         
-       
         recordSize = 0;
         for(var put=0;put<allData[symbol][week].options[0].puts.length;put++){
           record = [];
@@ -91,6 +100,13 @@ Promise.all(promises).then(function() {
           record.push(allData[symbol][week].options[0].puts[put].strike);
           record.push(allData[symbol][week].options[0].puts[put].lastPrice);
           record.push('put')
+          distance = ((price-allData[symbol][week].options[0].puts[put].strike)/price)*100;
+          distance = distance.toFixed(2);
+          record.push(distance);
+          
+          aprReturn = (((allData[symbol][week].options[0].puts[put].lastPrice/allData[symbol][week].options[0].puts[put].strike)/dateDiff)*250)*100;
+          aprReturn = aprReturn.toFixed(2);
+          record.push(aprReturn);
           filterData.push(record);
           recordSize++;
         }
@@ -110,24 +126,32 @@ let second = document.createElement('span');
 let third = document.createElement('span');
 let fourth = document.createElement('span');
 let fifth = document.createElement('span');
+let sixth = document.createElement('span');
+let seventh = document.createElement('span');
 
 first.style.display = "inline-block";
 second.style.display = "inline-block";
 third.style.display = "inline-block";
 fourth.style.display = "inline-block";
 fifth.style.display = "inline-block";
+sixth.style.display = "inline-block";
+seventh.style.display = "inline-block";
 
 first.style.width = "100px";
 second.style.width = "100px";
 third.style.width = "100px";
 fourth.style.width = "100px";
 fifth.style.width = "100px";
+sixth.style.width = "100px";
+seventh.style.width = "100px";
 
 first.textContent = filterData[i][0];
 second.textContent = filterData[i][1];
 third.textContent = filterData[i][2];
 fourth.textContent = filterData[i][3];
 fifth.textContent = filterData[i][4];
+sixth.textContent = filterData[i][5];
+seventh.textContent = filterData[i][6];
 
 let li = document.createElement("li");
 li.appendChild(first);
@@ -135,6 +159,8 @@ li.appendChild(second);
 li.appendChild(third);
 li.appendChild(fourth);
 li.appendChild(fifth);
+li.appendChild(sixth);
+li.appendChild(seventh);
 
 document.getElementById('list').appendChild(li);
 }
