@@ -1,5 +1,5 @@
 <div>
-  <ol id="list"><li><span style="width:100px; display:inline-block;">Symbol</span><span style="width:100px; display:inline-block;">Price</span><span style="width:100px; display:inline-block;">Strike</span><span style="width:100px; display:inline-block;">lastPrice</span><span style="width:100px; display:inline-block;">style</span><span style="width:100px; display:inline-block;">Distance(%)</span><span style="width:100px; display:inline-block;">Return(%)</span><span style="width:100px; display:inline-block;">Week</span>
+  <ol id="list"><li><span style="width:100px; display:inline-block;">Symbol</span><span style="width:100px; display:inline-block;">Price</span><span style="width:100px; display:inline-block;">Strike</span><span style="width:100px; display:inline-block;">lastPrice</span><span style="width:100px; display:inline-block;">Style</span><span style="width:100px; display:inline-block;">Distance(%)</span><span style="width:100px; display:inline-block;">Return(%)</span><span style="width:100px; display:inline-block;">Exp(days)</span>
 </li></ol>
 
 </div>
@@ -101,7 +101,7 @@ Promise.all(promises).then(function() {
           aprReturn = aprReturn.toFixed(2);
           record.push(aprReturn);
           
-          record.push(week+1);
+          record.push(dateDiff);
           
           lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].calls[call].lastTradeDate);
           
@@ -132,7 +132,7 @@ Promise.all(promises).then(function() {
           aprReturn = aprReturn.toFixed(2);
           record.push(aprReturn);
           
-          record.push(week+1);
+          record.push(dateDiff);
           lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].puts[put].lastTradeDate);
           
   				if (allData[symbol][week].options[0].puts[put].volume > volumeMin &&  
