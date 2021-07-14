@@ -49,7 +49,7 @@ for (let i = 0; i < option_symbols.length; i++) {
                         return response.json();
                     }).then(function(remainingData) {
                         allData[option_symbols[i]].push(remainingData.optionChain.result[0]);
-                        //console.log(allData[option_symbols[i]][j]);
+                        console.log(allData[option_symbols[i]][j]);
                     })
                  );
               }                                                                  
