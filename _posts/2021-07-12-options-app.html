@@ -23,7 +23,7 @@
   var strike = 0;
   
                          
-  var option_symbols = ['mrvl', 'intc'];
+  var option_symbols = ['amc', 'intc'];
   var base_url = 'https://query2.finance.yahoo.com/v7/finance/options/';
   
   var promises = [];  
@@ -89,7 +89,7 @@ Promise.all(promises).then(function() {
           record.push(week+1);
           
          
-          lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].calls[0].lastTradeDate);
+          lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].calls[call].lastTradeDate);
           console.log('lastTradeDateFromNow = ',lastTradeDateFromNow);
   				if (allData[symbol][week].options[0].calls[call].volume > volumeMin &&  
           	allData[symbol][week].options[0].calls[call].bid > bidMin &&
