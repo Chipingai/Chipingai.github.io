@@ -5,7 +5,13 @@
 </div>
 <script>
   
-  var option_symbols = ['AAPL', 'ABT', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'BABA', 'BIDU', 'COP', 'COST', 'DIS', 'FB'];
+  var option_symbols = ['AAPL', 'ABT', 'ABT', 'ADBE', 'AMT', 'AMC', 'AMD', 'AMZN', 'BABA', 'BIDU', 'COP', 'COST', 'DIS', 'FB','NEGG'];
+  
+  function true_expiration(time) {
+   return time + 24*60*60;   
+  }
+  
+  
   
   function within_two_weeks(unix_time) {
     let now = Date.now();
