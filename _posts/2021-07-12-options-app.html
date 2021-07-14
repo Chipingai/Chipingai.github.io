@@ -1,5 +1,5 @@
 <div>
-  <ol id="list"><li><span style="width:100px; display:inline-block;">Symbol</span><span style="width:100px; display:inline-block;">Price</span><span style="width:100px; display:inline-block;">Strike</span>
+  <ol id="list"><li><span style="width:100px; display:inline-block;">Symbol</span><span style="width:100px; display:inline-block;">Price</span><span style="width:100px; display:inline-block;">Strike</span><span style="width:100px; display:inline-block;">lastPrice</span><span style="width:100px; display:inline-block;">style</span>
 </li></ol>
 
 </div>
@@ -106,26 +106,37 @@ for(let i = 0; i < filterData.length; i++) {
 let first = document.createElement('span');
 let second = document.createElement('span');
 let third = document.createElement('span');
+let fourth = document.createElement('span');
+let fifth = document.createElement('span');
 
 first.style.display = "inline-block";
 second.style.display = "inline-block";
 third.style.display = "inline-block";
+fourth.style.display = "inline-block";
+fifth.style.display = "inline-block";
 
 first.style.width = "100px";
 second.style.width = "100px";
 third.style.width = "100px";
+fourth.style.width = "100px";
+fifth.style.width = "100px";
 
 first.textContent = filterData[i][0];
 second.textContent = filterData[i][1];
 third.textContent = filterData[i][2];
+fourth.textContent = filterData[i][3];
+fifth.textContent = filterData[i][4];
 
 let li = document.createElement("li");
 li.appendChild(first);
 li.appendChild(second);
 li.appendChild(third);
+li.appendChild(fourth);
+li.appendChild(fifth);
 
 document.getElementById('list').appendChild(li);
 }
+
 
  });
     
