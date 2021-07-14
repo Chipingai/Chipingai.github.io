@@ -64,7 +64,7 @@ for (let i = 0; i < option_symbols.length; i++) {
 				 );
 			}                                                                  
 		}
-	  } else errorString += option_symbols[i] + " ";
+	  } else errorString += option_symbols[i] + ", ";
           return Promise.all(promises2);
       }).catch(function(error) { 
 		console.log(error); 
@@ -91,10 +91,8 @@ var lastTradeDateMin = -3;
 
 Promise.all(promises).then(function() {  
 	let finalError = "Done!";
-	if (errorString) {
-		finalError = "These companies don't exist: " + errorString;
-	}
-	D('msg').textContent = errorString;
+	if (errorString) finalError = "These companies don't exist: " + errorString;
+	D('msg').textContent = finalError;
 	
     for (let symbol in allData) {   	
       price = allData[symbol][0].quote.regularMarketPrice; 
