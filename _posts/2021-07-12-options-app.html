@@ -48,7 +48,9 @@ for (let i = 0; i < option_symbols.length; i++) {
           //console.log(allData[option_symbols[i]][0]);
 
           let promises2 = [];
+          console.log("SYMBOL:",option_symbols[i]);
           for (let j = 1; j < allData[option_symbols[i]][0].expirationDates.length; j++) {
+              
               if (within_two_weeks(allData[option_symbols[i]][0].expirationDates[j])) {
                   promises2.push( 
                     fetch("https://ansyble.herokuapp.com/cors/", 
