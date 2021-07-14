@@ -1,7 +1,8 @@
 <div>
   
+<span style="word-wrap:break-word" id="msg"></span>	
+<br>
 <span style="word-wrap:break-word" id="reference"></span>
-	
 <br>
 	
 <input onkeyup="if (event.keyCode == 27) this.value = '';
@@ -17,79 +18,56 @@ id="tickerInput" type="text" style="margin-left:10px; margin-right:10px" autocom
 </div>
 
 <script>
-  
-  var option_symbols = ['AAPL', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'ATVI','BAC','BABA', 'BIDU', 'COP', 'C','COST', 'DIS', 'FB','EA','EBAY','GOOG','GOOGL','HD','INTC','JNJ','MA','MPC','MRVL','MSFT','MU','NEGG','NVDA','ORCL','PYPL','SHAK','SLB','T','TSM','TWTR','TXN','UBER','V','VLO','WFC','WISH','WMT','XOM']                     
-  var reference = "AAPL,ABT,ADBE,AMT,AMD,AMZN,ATVI,BAC,BABA,BIDU,COP,C,COST,DIS,FB,EA,EBAY,GOOG,GOOGL,HD,INTC,JNJ,MA,MPC,MRVL,MSFT,MU,NEGG,NVDA,ORCL,PYPL,SHAK,SLB,T,TSM,TWTR,TXN,UBER,V,VLO,WFC,WISH,WMT,XOM";
-	
-function D(str) { return document.getElementById(str); }
-
-D('reference').textContent = reference;
-D('tickerInput').value = reference;
-D('tickerInput').focus();
-	
-function submitTicker() {
-	let text = document.getElementById('tickerInput').value.replaceAll(" ", ",");	
-	option_symbols = text.split(",");
-  
-  
-  
-  function true_expiration(time) {
-   return time + 24*60*60;   
-  }
-  
-  function within_two_weeks(unix_time) {
-    let now = Date.now();
-    return (unix_time - now/1000 < 15*24*60*60);
-  }
-  
-  function date_diff(unix_time) {
-    let now = Date.now();
-    return (Math.floor((unix_time - now/1000)/(24*60*60)) + 2);
-  }
-
+  var errorString = "";
   var allData = {};
   var filterData = [];
   var record = [];
   var recordLength = 5;
   var price = 0;
   var strike = 0;
-  
-                         
-  
+  var option_symbols = ['AAPL', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'ATVI','BAC','BABA', 'BIDU', 'COP', 'C','COST', 'DIS', 'FB','EA','EBAY','GOOG','GOOGL','HD','INTC','JNJ','MA','MPC','MRVL','MSFT','MU','NEGG','NVDA','ORCL','PYPL','SHAK','SLB','T','TSM','TWTR','TXN','UBER','V','VLO','WFC','WISH','WMT','XOM']                     
+  var reference = "AAPL,ABT,ADBE,AMT,AMD,AMZN,ATVI,BAC,BABA,BIDU,COP,C,COST,DIS,FB,EA,EBAY,GOOG,GOOGL,HD,INTC,JNJ,MA,MPC,MRVL,MSFT,MU,NEGG,NVDA,ORCL,PYPL,SHAK,SLB,T,TSM,TWTR,TXN,UBER,V,VLO,WFC,WISH,WMT,XOM";
   var base_url = 'https://query2.finance.yahoo.com/v7/finance/options/';
-  
-  var promises = [];  
-  
+
+D('reference').textContent = reference;
+D('tickerInput').value = reference;
+D('tickerInput').focus();
+	
+function submitTicker() {
+D('msg').textContent = "Loading...";
+option_symbols = D('tickerInput').value.replaceAll(" ", ",").split(",");
+var promises = [];  
   
 //******* Fetch data *****
 for (let i = 0; i < option_symbols.length; i++) {
-    allData[option_symbols[i]] = [];
     promises.push (  
       fetch("https://ansyble.herokuapp.com/cors/", {headers: {'Target-URL':base_url + option_symbols[i]}, cache:'no-cache'}).then(function(response) {
           return response.json();
       }).then(function(data) {
+	  errorString = "These companies don't exist: ";
           let promises2 = [];
-	      if (data.optionChain.result[0]) {
-          allData[option_symbols[i]].push(data.optionChain.result[0]);
-          //console.log(allData[option_symbols[i]][0]);
+	  if (data.optionChain.result[0]) {
+    		allData[option_symbols[i]] = [];
+		allData[option_symbols[i]].push(data.optionChain.result[0]);
+		//console.log(allData[option_symbols[i]][0]);
 
-		  console.log("SYMBOL:",option_symbols[i]);
-		  for (let j = 1; j < allData[option_symbols[i]][0].expirationDates.length; j++) {
+		console.log("SYMBOL:",option_symbols[i]);
+		for (let j = 1; j < allData[option_symbols[i]][0].expirationDates.length; j++) {
 
-		      if (within_two_weeks(allData[option_symbols[i]][0].expirationDates[j])) {
-			  promises2.push( 
-			    fetch("https://ansyble.herokuapp.com/cors/", 
-			    {headers: {'Target-URL':base_url + option_symbols[i] + "?date=" + allData[option_symbols[i]][0].expirationDates[j]}, 
-			    cache:'no-cache'}).then(function(response) {
-				return response.json();
-			    }).then(function(remainingData) {
-				allData[option_symbols[i]].push(remainingData.optionChain.result[0]);
-				//console.log(allData[option_symbols[i]][j]);
-			    })
-			 );
-		      }                                                                  
-		  }
-	      } else console.log("No first week for: " + option_symbols[i]);
+			if (within_two_weeks(allData[option_symbols[i]][0].expirationDates[j])) {
+				  promises2.push( 
+				    fetch("https://ansyble.herokuapp.com/cors/", 
+				    {headers: {'Target-URL':base_url + option_symbols[i] + "?date=" + allData[option_symbols[i]][0].expirationDates[j]}, 
+				    cache:'no-cache'}).then(function(response) {
+					return response.json();
+				    }).then(function(remainingData) {
+					allData[option_symbols[i]].push(remainingData.optionChain.result[0]);
+					//console.log(allData[option_symbols[i]][j]);
+				    })
+				 );
+			}                                                                  
+		}
+	  } else errorString += option_symbols[i] + " ";
           return Promise.all(promises2);
       }) 
     );
@@ -108,6 +86,8 @@ var bidMin = -0.05;
 var lastTradeDateMin = -3;
 
 Promise.all(promises).then(function() {  
+	D('msg').textContent = errorString;
+	
     for (let symbol in allData) {   	
       price = allData[symbol][0].quote.regularMarketPrice; 
     	for(var week=0;week<allData[symbol].length;week++){ 
@@ -177,66 +157,70 @@ Promise.all(promises).then(function() {
       }
     }
     
-    
-
  
- 
- 
+//***** Load HTML filter data *****
 for(let i = 0; i < filterData.length; i++) {
+	let first = document.createElement('span');
+	let second = document.createElement('span');
+	let third = document.createElement('span');
+	let fourth = document.createElement('span');
+	let fifth = document.createElement('span');
+	let sixth = document.createElement('span');
+	let seventh = document.createElement('span');
 
-let first = document.createElement('span');
-let second = document.createElement('span');
-let third = document.createElement('span');
-let fourth = document.createElement('span');
-let fifth = document.createElement('span');
-let sixth = document.createElement('span');
-let seventh = document.createElement('span');
+	first.style.display = "inline-block";
+	second.style.display = "inline-block";
+	third.style.display = "inline-block";
+	fourth.style.display = "inline-block";
+	fifth.style.display = "inline-block";
+	sixth.style.display = "inline-block";
+	seventh.style.display = "inline-block";
 
-first.style.display = "inline-block";
-second.style.display = "inline-block";
-third.style.display = "inline-block";
-fourth.style.display = "inline-block";
-fifth.style.display = "inline-block";
-sixth.style.display = "inline-block";
-seventh.style.display = "inline-block";
+	first.style.width = "100px";
+	second.style.width = "100px";
+	third.style.width = "100px";
+	fourth.style.width = "100px";
+	fifth.style.width = "100px";
+	sixth.style.width = "100px";
+	seventh.style.width = "100px";
 
-first.style.width = "100px";
-second.style.width = "100px";
-third.style.width = "100px";
-fourth.style.width = "100px";
-fifth.style.width = "100px";
-sixth.style.width = "100px";
-seventh.style.width = "100px";
+	first.textContent = filterData[i][0];
+	second.textContent = filterData[i][1];
+	third.textContent = filterData[i][2];
+	fourth.textContent = filterData[i][3];
+	fifth.textContent = filterData[i][4];
+	sixth.textContent = filterData[i][5];
+	seventh.textContent = filterData[i][6];
 
-first.textContent = filterData[i][0];
-second.textContent = filterData[i][1];
-third.textContent = filterData[i][2];
-fourth.textContent = filterData[i][3];
-fifth.textContent = filterData[i][4];
-sixth.textContent = filterData[i][5];
-seventh.textContent = filterData[i][6];
+	let li = document.createElement("li");
+	li.appendChild(first);
+	li.appendChild(second);
+	li.appendChild(third);
+	li.appendChild(fourth);
+	li.appendChild(fifth);
+	li.appendChild(sixth);
+	li.appendChild(seventh);
 
-let li = document.createElement("li");
-li.appendChild(first);
-li.appendChild(second);
-li.appendChild(third);
-li.appendChild(fourth);
-li.appendChild(fifth);
-li.appendChild(sixth);
-li.appendChild(seventh);
+	let eighth = document.createElement('span');
+	eighth.style.display = "inline-block";
+	eighth.style.width = "100px";
+	eighth.textContent = filterData[i][7];
+	li.appendChild(eighth);
 
-let eighth = document.createElement('span');
-eighth.style.display = "inline-block";
-eighth.style.width = "100px";
-eighth.textContent = filterData[i][7];
-li.appendChild(eighth);
-
-document.getElementById('list').appendChild(li);
+	document.getElementById('list').appendChild(li);
 }
 
- });
-    
-  
+}); // promises.all
+} // submitTicker function
+
+function D(str) { return document.getElementById(str); }
+function true_expiration(time) {return time + 24*60*60; }
+function within_two_weeks(unix_time) {
+	let now = Date.now();
+	return (unix_time - now/1000 < 15*24*60*60);
 }
-                                                                 
+function date_diff(unix_time) {
+	let now = Date.now();
+	return (Math.floor((unix_time - now/1000)/(24*60*60)) + 2);
+}
 </script>
