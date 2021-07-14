@@ -29,7 +29,7 @@ D('tickerInput').focus();
 	
 function submitTicker() {
 
-var errorString = "";
+var errorString = "These companies don't exist: ";
 var allData = {};
 	
 D('msg').textContent = "Loading...";
@@ -42,7 +42,6 @@ for (let i = 0; i < option_symbols.length; i++) {
       fetch("https://ansyble.herokuapp.com/cors/", {headers: {'Target-URL':base_url + option_symbols[i]}, cache:'no-cache'}).then(function(response) {
           return response.json();
       }).then(function(data) {
-	  errorString = "These companies don't exist: ";
           let promises2 = [];
 	  if (data.optionChain.result[0]) {
     		allData[option_symbols[i]] = [];
