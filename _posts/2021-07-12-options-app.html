@@ -25,6 +25,7 @@ function D(str) { return document.getElementById(str); }
 
 D('reference').textContent = reference;
 D('tickerInput').value = reference;
+D('tickerInput').focus();
 	
 function submitTicker() {
 	let text = document.getElementById('tickerInput').value.replaceAll(" ", ",");	
