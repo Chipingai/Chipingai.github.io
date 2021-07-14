@@ -60,15 +60,21 @@ for (let i = 0; i < option_symbols.length; i++) {
 }
 
 
+
 //***** Create filter daa *****
 var recordSize = 0;
 var distance = 0;
 var aprReturn = 0;
+var distanceMin = 8;
+var aprReturnMin = 6;
+var volumeMin = 5;
+var bidMin = 0.05;
+var lastTradeDateMin = -3;
+
 Promise.all(promises).then(function() {  
     for (let symbol in allData) {   	
       price = allData[symbol][0].quote.regularMarketPrice; 
     	for(var week=0;week<allData[symbol].length;week++){   	
-        console.log("expiration week : " , week+1);
         dateDiff = date_diff(allData[symbol][week].options[0].calls[0].expiration);
         recordSize = 0;
         for(var call=0;call<allData[symbol][week].options[0].calls.length;call++){
@@ -88,17 +94,18 @@ Promise.all(promises).then(function() {
           
           record.push(week+1);
           
-         
           lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].calls[call].lastTradeDate);
-          console.log('lastTradeDateFromNow = ',lastTradeDateFromNow);
+          
   				if (allData[symbol][week].options[0].calls[call].volume > volumeMin &&  
-          	allData[symbol][week].options[0].calls[call].bid > bidMin &&
+          	//allData[symbol][week].options[0].calls[call].bid > bidMin &&
             lastTradeDateFromNow > lastTradeDateMin &&
             distance > distanceMin && aprReturn > aprReturnMin) {
               filterData.push(record);
               recordSize++;
+          }
+          
         }
-        //console.log("symbol : " + symbol + ", call record size = " + recordSize);
+        console.log(symbol + ", call record size = " + recordSize);
         
         recordSize = 0;
         for(var put=0;put<allData[symbol][week].options[0].puts.length;put++){
@@ -117,10 +124,17 @@ Promise.all(promises).then(function() {
           record.push(aprReturn);
           
           record.push(week+1);
-          filterData.push(record);
-          recordSize++;
+          lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].puts[put].lastTradeDate);
+          
+  				if (allData[symbol][week].options[0].puts[put].volume > volumeMin &&  
+          	//allData[symbol][week].options[0].calls[call].bid > bidMin &&
+            lastTradeDateFromNow > lastTradeDateMin &&
+            distance > distanceMin && aprReturn > aprReturnMin) {
+              filterData.push(record);
+              recordSize++;
+          }
         }
-        //console.log("symbol : " + symbol + ", put record size = " + recordSize);
+        console.log(symbol + ", put record size = " + recordSize);
       }
     }
     
