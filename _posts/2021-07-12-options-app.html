@@ -78,7 +78,7 @@ Promise.all(promises).then(function() {
       price = allData[symbol][0].quote.regularMarketPrice; 
     	for(var week=0;week<allData[symbol].length;week++){   	
         dateDiff = date_diff(allData[symbol][week].options[0].calls[0].expiration);
-        console.log('dataDiff=",dateDiff)
+        console.log("dataDiff=",dateDiff);
         recordSize = 0;
         for(var call=0;call<allData[symbol][week].options[0].calls.length;call++){
         	record = [];
