@@ -67,7 +67,10 @@ for (let i = 0; i < option_symbols.length; i++) {
 		}
 	  } else errorString += option_symbols[i] + " ";
           return Promise.all(promises2);
-      }) 
+      }).catch(function(error) { 
+		console.log(error); 
+	      	errorString += option_symbols[i] + "(caught via catch) ";
+	});	
     );
 }
 
