@@ -1,5 +1,5 @@
 <div>
-  <ol id="list"><li><span style="width:100px; display:inline-block;">Symbol</span><span style="width:100px; display:inline-block;">Price</span><span style="width:100px; display:inline-block;">Strike</span><span style="width:100px; display:inline-block;">lastPrice</span><span style="width:100px; display:inline-block;">style</span><span style="width:100px; display:inline-block;">Distance(%)</span><span style="width:100px; display:inline-block;">Return(%)</span>
+  <ol id="list"><li><span style="width:100px; display:inline-block;">Symbol</span><span style="width:100px; display:inline-block;">Price</span><span style="width:100px; display:inline-block;">Strike</span><span style="width:100px; display:inline-block;">lastPrice</span><span style="width:100px; display:inline-block;">style</span><span style="width:100px; display:inline-block;">Distance(%)</span><span style="width:100px; display:inline-block;">Return(%)</span><span style="width:100px; display:inline-block;">Week</span>
 </li></ol>
 
 </div>
@@ -86,9 +86,11 @@ Promise.all(promises).then(function() {
           aprReturn = aprReturn.toFixed(2);
           record.push(aprReturn);
           
+          record.push(week+1);
+          
+         
           filterData.push(record);
           recordSize++
-          console.log(distance,aprReturn,dateDiff)
         }
         //console.log("symbol : " + symbol + ", call record size = " + recordSize);
         
@@ -107,6 +109,8 @@ Promise.all(promises).then(function() {
           aprReturn = (((allData[symbol][week].options[0].puts[put].lastPrice/allData[symbol][week].options[0].puts[put].strike)/dateDiff)*250)*100;
           aprReturn = aprReturn.toFixed(2);
           record.push(aprReturn);
+          
+          record.push(week+1);
           filterData.push(record);
           recordSize++;
         }
@@ -162,9 +166,14 @@ li.appendChild(fifth);
 li.appendChild(sixth);
 li.appendChild(seventh);
 
+let eighth = document.createElement('span');
+eighth.style.display = "inline-block";
+eighth.style.width = "100px";
+eighth.textContent = filterData[i][7];
+li.appendChild(eighth);
+
 document.getElementById('list').appendChild(li);
 }
-
 
  });
     
