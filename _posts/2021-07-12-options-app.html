@@ -49,7 +49,7 @@ for (let i = 0; i < option_symbols.length; i++) {
                         return response.json();
                     }).then(function(remainingData) {
                         allData[option_symbols[i]].push(remainingData.optionChain.result[0]);
-                        console.log(allData[option_symbols[i]][j]);
+                        //console.log(allData[option_symbols[i]][j]);
                     })
                  );
               }                                                                  
@@ -105,7 +105,7 @@ Promise.all(promises).then(function() {
           }
           
         }
-        console.log(symbol + ", call record size = " + recordSize);
+        //console.log(symbol + ", call record size = " + recordSize);
         
         recordSize = 0;
         for(var put=0;put<allData[symbol][week].options[0].puts.length;put++){
