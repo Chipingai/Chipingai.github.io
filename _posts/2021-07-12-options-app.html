@@ -5,6 +5,8 @@
 </div>
 <script>
   
+  var option_symbols = ['AAPL', 'ABT', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'BABA', 'BIDU', 'COP', 'COST', 'DIS', 'FB'];
+  
   function within_two_weeks(unix_time) {
     let now = Date.now();
     return (unix_time - now/1000 < 15*24*60*60);
@@ -23,7 +25,7 @@
   var strike = 0;
   
                          
-  var option_symbols = ['amc', 'intc'];
+  
   var base_url = 'https://query2.finance.yahoo.com/v7/finance/options/';
   
   var promises = [];  
