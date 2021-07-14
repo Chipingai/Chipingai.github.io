@@ -1,12 +1,27 @@
 <div>
+  
+  <input onkeyup="if (event.keyCode == 27) this.value = '';
+		else if (event.keyCode == 13) {
+			event.preventDefault(); 
+			submitTicker();
+		}"
+id="tickerInput" type="text" style="margin-left:10px; margin-right:10px" autocomplete="off" placeholder="Add stock ticker..."> 
+  
   <ol id="list"><li><span style="width:100px; display:inline-block;">Symbol</span><span style="width:100px; display:inline-block;">Price</span><span style="width:100px; display:inline-block;">Strike</span><span style="width:100px; display:inline-block;">lastPrice</span><span style="width:100px; display:inline-block;">Style</span><span style="width:100px; display:inline-block;">Distance(%)</span><span style="width:100px; display:inline-block;">Return(%)</span><span style="width:100px; display:inline-block;">Exp(days)</span>
 </li></ol>
 
 </div>
 <script>
   
-  var option_symbols = ['AAPL', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'ATVI','BAC','BABA', 'BIDU', 'COP', 'C','COST', 'DIS', 'FB','EA','EBAY','GOOG','GOOGL','HD','INTC','JNJ','MA','MPC','MRVL','MSFT','MU','NEGG','NVDA','ORCL','PYPL','SHAK','SLB','T','TSM','TWTR','TXN','UBER','V','VLO','WFC','WISH','WMT','XOM']
-                        
+  var option_symbols = ['AAPL', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'ATVI','BAC','BABA', 'BIDU', 'COP', 'C','COST', 'DIS', 'FB','EA','EBAY','GOOG','GOOGL','HD','INTC','JNJ','MA','MPC','MRVL','MSFT','MU','NEGG','NVDA','ORCL','PYPL','SHAK','SLB','T','TSM','TWTR','TXN','UBER','V','VLO','WFC','WISH','WMT','XOM']                     
+  
+  
+function submitTicker() {
+	let text = document.getElementById('tickerInput').value.replaceAll(" ", ",");	
+	option_symbols = text.split();
+  
+  
+  
   function true_expiration(time) {
    return time + 24*60*60;   
   }
@@ -210,5 +225,7 @@ document.getElementById('list').appendChild(li);
 
  });
     
+  
+}
                                                                  
 </script>
