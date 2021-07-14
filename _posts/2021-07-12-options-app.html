@@ -21,8 +21,11 @@ id="tickerInput" type="text" style="margin-left:10px; margin-right:10px" autocom
   var option_symbols = ['AAPL', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'ATVI','BAC','BABA', 'BIDU', 'COP', 'C','COST', 'DIS', 'FB','EA','EBAY','GOOG','GOOGL','HD','INTC','JNJ','MA','MPC','MRVL','MSFT','MU','NEGG','NVDA','ORCL','PYPL','SHAK','SLB','T','TSM','TWTR','TXN','UBER','V','VLO','WFC','WISH','WMT','XOM']                     
   var reference = "AAPL,ABT,ADBE,AMT,AMD,AMZN,ATVI,BAC,BABA,BIDU,COP,C,COST,DIS,FB,EA,EBAY,GOOG,GOOGL,HD,INTC,JNJ,MA,MPC,MRVL,MSFT,MU,NEGG,NVDA,ORCL,PYPL,SHAK,SLB,T,TSM,TWTR,TXN,UBER,V,VLO,WFC,WISH,WMT,XOM";
 	
-id = 
-  
+function D(str) { return document.getElementById(str); }
+
+D('reference').textContent = reference;
+D('tickerInput').value = reference;
+	
 function submitTicker() {
 	let text = document.getElementById('tickerInput').value.replaceAll(" ", ",");	
 	option_symbols = text.split(",");
