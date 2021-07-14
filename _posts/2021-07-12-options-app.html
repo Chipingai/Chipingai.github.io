@@ -89,8 +89,14 @@ Promise.all(promises).then(function() {
           record.push(week+1);
           
          
-          filterData.push(record);
-          recordSize++
+          lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].calls[0].lastTradeDate);
+          console.log('lastTradeDateFromNow = ',lastTradeDateFromNow);
+  				if (allData[symbol][week].options[0].calls[call].volume > volumeMin &&  
+          	allData[symbol][week].options[0].calls[call].bid > bidMin &&
+            lastTradeDateFromNow > lastTradeDateMin &&
+            distance > distanceMin && aprReturn > aprReturnMin) {
+              filterData.push(record);
+              recordSize++;
         }
         //console.log("symbol : " + symbol + ", call record size = " + recordSize);
         
