@@ -18,13 +18,6 @@ id="tickerInput" type="text" style="margin-left:10px; margin-right:10px" autocom
 </div>
 
 <script>
-  var errorString = "";
-  var allData = {};
-  var filterData = [];
-  var record = [];
-  var recordLength = 5;
-  var price = 0;
-  var strike = 0;
   var option_symbols = ['AAPL', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'ATVI','BAC','BABA', 'BIDU', 'COP', 'C','COST', 'DIS', 'FB','EA','EBAY','GOOG','GOOGL','HD','INTC','JNJ','MA','MPC','MRVL','MSFT','MU','NEGG','NVDA','ORCL','PYPL','SHAK','SLB','T','TSM','TWTR','TXN','UBER','V','VLO','WFC','WISH','WMT','XOM']                     
   var reference = "AAPL,ABT,ADBE,AMT,AMD,AMZN,ATVI,BAC,BABA,BIDU,COP,C,COST,DIS,FB,EA,EBAY,GOOG,GOOGL,HD,INTC,JNJ,MA,MPC,MRVL,MSFT,MU,NEGG,NVDA,ORCL,PYPL,SHAK,SLB,T,TSM,TWTR,TXN,UBER,V,VLO,WFC,WISH,WMT,XOM";
   var base_url = 'https://query2.finance.yahoo.com/v7/finance/options/';
@@ -34,6 +27,10 @@ D('tickerInput').value = reference;
 D('tickerInput').focus();
 	
 function submitTicker() {
+
+var errorString = "";
+var allData = {};
+	
 D('msg').textContent = "Loading...";
 option_symbols = D('tickerInput').value.replaceAll(" ", ",").split(",");
 var promises = [];  
@@ -73,9 +70,13 @@ for (let i = 0; i < option_symbols.length; i++) {
     );
 }
 
-
-
 //***** Create filter data *****
+var filterData = [];
+var record = [];
+var recordLength = 5;
+var price = 0;
+var strike = 0;	
+	
 var recordSize = 0;
 var distance = 0;
 var aprReturn = 0;
@@ -86,6 +87,7 @@ var bidMin = -0.05;
 var lastTradeDateMin = -3;
 
 Promise.all(promises).then(function() {  
+	errorString += "...(that's all!)";
 	D('msg').textContent = errorString;
 	
     for (let symbol in allData) {   	
