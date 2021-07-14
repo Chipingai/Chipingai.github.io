@@ -139,7 +139,7 @@ Promise.all(promises).then(function() {
           lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].puts[put].lastTradeDate);
           
   				if (allData[symbol][week].options[0].puts[put].volume > volumeMin &&  
-          	allData[symbol][week].options[0].calls[call].bid > bidMin &&
+          	allData[symbol][week].options[0].puts[put].bid > bidMin &&
             lastTradeDateFromNow > lastTradeDateMin &&
             distance > distanceMin && aprReturn > aprReturnMin) {
               filterData.push(record);
