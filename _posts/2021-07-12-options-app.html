@@ -13,7 +13,7 @@ Reference List:
 			submitTicker();
 		}"
 id="tickerInput" type="text" style="margin-left:10px; margin-right:10px" autocomplete="off" placeholder="Add stock ticker..."> 
-  <div style="background-color:tan; padding-left:40px;"><span style="width:70px; display:inline-block;">Symbol</span><span style="width:70px; display:inline-block;">Price</span><span style="width:70px; display:inline-block;">Strike</span><span style="width:70px; display:inline-block;">lastPrice</span><span style="width:50px; display:inline-block;">Type</span><span style="width:70px; display:inline-block;">DIST(%)</span><span style="width:70px; display:inline-block;">RET(%)</span><span style="width:70px; display:inline-block;">Exp(days)</span>
+  <div style="background-color:tan; padding-left:40px;"><span style="width:70px; display:inline-block;">Symbol</span><span style="width:70px; display:inline-block;">Price</span><span style="width:70px; display:inline-block;">Strike</span><span style="width:70px; display:inline-block;">lastPrice</span><span style="width:50px; display:inline-block;">Type</span><span style="width:70px; display:inline-block;">RET(%)</span><span style="width:70px; display:inline-block;">DIST(%)</span><span style="width:70px; display:inline-block;">Exp(days)</span><span style="width:70px; display:inline-block;">Bid</span><span style="width:70px; display:inline-block;">Ask</span>
 </div>
   <ol style="margin-top:0px; height:500px; position:relative; overflow:auto;" id="list"></ol>
 
@@ -112,15 +112,19 @@ Promise.all(promises).then(function() {
           record.push(allData[symbol][week].options[0].calls[call].strike);
           record.push(allData[symbol][week].options[0].calls[call].lastPrice);
           record.push('call');
-          distance = ((allData[symbol][week].options[0].calls[call].strike-price)/price)*100;
-          distance = distance.toFixed(2);
-          record.push(distance);
+          
           
           aprReturn = (((allData[symbol][week].options[0].calls[call].lastPrice/allData[symbol][week].options[0].calls[call].strike)/dateDiff)*250)*100;
           aprReturn = aprReturn.toFixed(2);
           record.push(aprReturn);
+		
+	  distance = ((allData[symbol][week].options[0].calls[call].strike-price)/price)*100;
+          distance = distance.toFixed(2);
+          record.push(distance);
           
           record.push(dateDiff);
+	  record.push(allData[symbol][week].options[0].calls[call].bid);
+          record.push(allData[symbol][week].options[0].calls[call].ask);
           
           lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].calls[call].lastTradeDate);
           
@@ -143,15 +147,19 @@ Promise.all(promises).then(function() {
           record.push(allData[symbol][week].options[0].puts[put].strike);
           record.push(allData[symbol][week].options[0].puts[put].lastPrice);
           record.push('PUT')
-          distance = ((price-allData[symbol][week].options[0].puts[put].strike)/price)*100;
-          distance = distance.toFixed(2);
-          record.push(distance);
           
           aprReturn = (((allData[symbol][week].options[0].puts[put].lastPrice/allData[symbol][week].options[0].puts[put].strike)/dateDiff)*250)*100;
           aprReturn = aprReturn.toFixed(2);
           record.push(aprReturn);
+		
+	  distance = ((price-allData[symbol][week].options[0].puts[put].strike)/price)*100;
+          distance = distance.toFixed(2);
+          record.push(distance);
           
           record.push(dateDiff);
+	  record.push(allData[symbol][week].options[0].puts[put].bid);
+          record.push(allData[symbol][week].options[0].puts[put].ask);
+		
           lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].puts[put].lastTradeDate);
           
   				if (allData[symbol][week].options[0].puts[put].volume > volumeMin &&  
@@ -233,6 +241,18 @@ for(let i = 0; i < filterData.length; i++) {
 	eighth.style.width = "70px";
 	eighth.textContent = filterData[i][7];
 	li.appendChild(eighth);
+	
+	let nineth = document.createElement('span');
+	nineth.style.display = "inline-block";
+	nineth.style.width = "70px";
+	nineth.textContent = filterData[i][7];
+	li.appendChild(nineth);
+	
+	let tenth = document.createElement('span');
+	tenth.style.display = "inline-block";
+	tenth.style.width = "70px";
+	tenth.textContent = filterData[i][7];
+	li.appendChild(tenth);
 
 	document.getElementById('list').appendChild(li);
 }
