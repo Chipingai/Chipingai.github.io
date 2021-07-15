@@ -165,10 +165,11 @@ Promise.all(promises).then(function() {
     }
 
 	
-//filterData.sort(function (a,b){
-	//return a[4] - b[4];
-//});
-console.log(filterData.sort);
+filterData.sort(function (element_a,element_b){
+	return element_a[4] - element_b[4];
+});
+
+console.log(filterData);
  
 //***** Load HTML filter data *****
 for(let i = 0; i < filterData.length; i++) {
