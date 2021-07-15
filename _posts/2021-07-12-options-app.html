@@ -236,7 +236,7 @@ function D(str) { return document.getElementById(str); }
 function true_expiration(time) {return time + 24*60*60; }
 function within_two_weeks(unix_time) {
 	let now = Date.now();
-	return (unix_time - now/1000 < 15*24*60*60);
+	return (unix_time - now/1000 < 14*24*60*60);
 }
 function date_diff(unix_time) {
 	let now = Date.now();
