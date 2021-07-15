@@ -187,9 +187,9 @@ filterData.sort(function (element_a,element_b){
 });
 */
 
-//a[4] is option type and a[6] is APR Return
+//a[4] is option type and a[5] is APR Return
 filterData.sort(function(a, b) {
-  return  a[4].localeCompare(b[4]) || (b[6] - a[6]);
+  return  a[4].localeCompare(b[4]) || (b[5] - a[5]);
   //return totalCompare1(a[0], b[0]) || a[1].localeCompare(b[1]);
 });	
  
