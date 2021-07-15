@@ -108,7 +108,7 @@ Promise.all(promises).then(function() {
         for(var call=0;call<allData[symbol][week].options[0].calls.length;call++){
         	record = [];
         	record.push(symbol);
-          record.push(price);
+          record.push(price.toFixed(2));
           record.push(allData[symbol][week].options[0].calls[call].strike);
           record.push(allData[symbol][week].options[0].calls[call].lastPrice);
           record.push('call');
