@@ -138,8 +138,8 @@ Promise.all(promises).then(function() {
         recordSize = 0;
         for(var put=0;put<allData[symbol][week].options[0].puts.length;put++){
           record = [];
-        	record.push(symbol);
-          record.push(price);
+        	record.push(spriceymbol);
+          record.push(price.toFixed(2));
           record.push(allData[symbol][week].options[0].puts[put].strike);
           record.push(allData[symbol][week].options[0].puts[put].lastPrice);
           record.push('PUT')
