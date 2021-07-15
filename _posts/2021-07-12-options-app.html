@@ -168,6 +168,7 @@ Promise.all(promises).then(function() {
 filterData.sort(function (a,b){
 	return a[4] - b[4];
 });
+console.log(filterData.sort);
  
 //***** Load HTML filter data *****
 for(let i = 0; i < filterData.length; i++) {
