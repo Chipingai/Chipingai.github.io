@@ -164,9 +164,21 @@ Promise.all(promises).then(function() {
       }
     }
 
+/*	
+filterData.sort(function (element_a,element_b){
+	if(element_a[4] == 'call') return -1;
+  	if(element_a[4] != 'call') return 1;
+  	return 0;
+*/	
+filterData.sort(function (element_a,element_b){
+  return element_b[6] - element_a[6] ;
+});
+ 
+//return item1.attr.localeCompare(item2.attr);		//for string compare
+});
 	
 filterData.sort(function (element_a,element_b){
-	return element_a[4] - element_b[4];
+	return element_b[6] - element_a[6];
 });
 
 console.log(filterData);
