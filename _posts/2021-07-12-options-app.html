@@ -211,10 +211,9 @@ for(let i = 0; i < filterData.length; i++) {
 	third.textContent = filterData[i][2];
 	fourth.textContent = filterData[i][3];
 	fifth.textContent = filterData[i][4];
-	if (fifth.textContent == "PUT") fifth.style.backgroundColor = "skyblue";
 	sixth.textContent = filterData[i][5];
 	seventh.textContent = filterData[i][6];
-
+	
 	let li = document.createElement("li");
 	li.appendChild(first);
 	li.appendChild(second);
@@ -241,6 +240,20 @@ for(let i = 0; i < filterData.length; i++) {
 	tenth.style.width = "70px";
 	tenth.textContent = filterData[i][9];
 	li.appendChild(tenth);
+	
+	if (fifth.textContent == "PUT") first.style.backgroundColor = "skyblue";
+	if (fifth.textContent == "PUT") second.style.backgroundColor = "skyblue";
+	if (fifth.textContent == "PUT") third.style.backgroundColor = "skyblue";
+	if (fifth.textContent == "PUT") fourth.style.backgroundColor = "skyblue";
+	if (fifth.textContent == "PUT") fifth.style.backgroundColor = "skyblue";
+	if (fifth.textContent == "PUT") sixth.style.backgroundColor = "skyblue";
+	if (fifth.textContent == "PUT") seventh.style.backgroundColor = "skyblue";
+	if (fifth.textContent == "PUT") eighth.style.backgroundColor = "skyblue";
+	if (fifth.textContent == "PUT") nineth.style.backgroundColor = "skyblue";
+	if (fifth.textContent == "PUT") tenth.style.backgroundColor = "skyblue";
+
+	
+
 
 	document.getElementById('list').appendChild(li);
 }
