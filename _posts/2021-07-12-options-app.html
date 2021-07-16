@@ -100,7 +100,7 @@ Promise.all(promises).then(function() {
     for (let symbol in allData) {   	
       price = allData[symbol][0].quote.regularMarketPrice; 
     	for(var week=0;week<allData[symbol].length;week++){ 
-        console.log("inside create filter data SYMBOL:",symbol);
+        //console.log("inside create filter data SYMBOL:",symbol);
         dateDiff = date_diff(allData[symbol][week].options[0].calls[0].expiration);
         //console.log("dataDiff=",dateDiff);
         recordSize = 0;
