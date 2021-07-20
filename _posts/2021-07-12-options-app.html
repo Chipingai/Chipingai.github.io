@@ -127,11 +127,12 @@ Promise.all(promises).then(function() {
           record.push(allData[symbol][week].options[0].calls[call].ask);
           
           lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].calls[call].lastTradeDate);
-          
-  				if (allData[symbol][week].options[0].calls[call].volume > volumeMin &&  
+          distanceMin = 8;
+	  aprReturnMin = 6;
+  	  if (allData[symbol][week].options[0].calls[call].volume > volumeMin &&  
           	allData[symbol][week].options[0].calls[call].bid > bidMin &&
-            lastTradeDateFromNow > lastTradeDateMin &&
-            distance > distanceMin && aprReturn > aprReturnMin) {
+            	lastTradeDateFromNow > lastTradeDateMin &&
+            	distance > distanceMin && aprReturn > aprReturnMin) {
               filterData.push(record);
               recordSize++;
           }
@@ -159,13 +160,14 @@ Promise.all(promises).then(function() {
           record.push(dateDiff);
 	  record.push(allData[symbol][week].options[0].puts[put].bid);
           record.push(allData[symbol][week].options[0].puts[put].ask);
-		
+          distanceMin = 10;
+	  aprReturnMin = 8;
           lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].puts[put].lastTradeDate);
           
-  				if (allData[symbol][week].options[0].puts[put].volume > volumeMin &&  
+  	  if (allData[symbol][week].options[0].puts[put].volume > volumeMin &&  
           	allData[symbol][week].options[0].puts[put].bid > bidMin &&
-            lastTradeDateFromNow > lastTradeDateMin &&
-            distance > distanceMin && aprReturn > aprReturnMin) {
+            	lastTradeDateFromNow > lastTradeDateMin &&
+            	distance > distanceMin && aprReturn > aprReturnMin) {
               filterData.push(record);
               recordSize++;
           }
