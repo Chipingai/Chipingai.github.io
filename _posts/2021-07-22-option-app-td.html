@@ -24,8 +24,8 @@ id="tickerInput" type="text" style="margin-left:10px; margin-right:10px" autocom
   //var reference = "AAPL,ABT,ADBE,AMT,AMD,AMZN,ATVI,BA,BAC,BABA,BIDU,COP,C,COST,DIS,FB,EA,EBAY,GOOG,GOOGL,HD,INTC,JNJ,MA,MPC,MRVL,MSFT,MU,NVDA,ORCL,PYPL,SHAK,SLB,T,TSM,TWTR,TXN,UBER,V,VLO,WFC,WISH,WMT,XOM";
   var base_url = 'https://query2.finance.yahoo.com/v7/finance/options/';
 	
-var option_symbols = ['AAPL', 'ABT'];                    
-var reference = "AAPL,ABT";
+var option_symbols = ['AMC', 'ABT'];                    
+var reference = "AMC,ABT";
 
 D('reference').textContent = reference;
 D('tickerInput').value = reference;
@@ -52,7 +52,7 @@ for (let i = 0; i < option_symbols.length; i++) {
 	  if (data.optionChain.result[0]) {
     		allData[option_symbols[i]] = [];
 		allData[option_symbols[i]].push(data.optionChain.result[0]);
-		//console.log(allData[option_symbols[i]][0]);
+		console.log(allData[option_symbols[i]][0]);
 
 		console.log("SYMBOL:",option_symbols[i], "allData[option_symbols[i]][0].expirationDates.length:",allData[option_symbols[i]][0].expirationDates.length);
 		for (let j = 1; j < allData[option_symbols[i]][0].expirationDates.length; j++) {
@@ -65,7 +65,7 @@ for (let i = 0; i < option_symbols.length; i++) {
 					return response.json();
 				    }).then(function(remainingData) {
 					allData[option_symbols[i]].push(remainingData.optionChain.result[0]);
-					//console.log(allData[option_symbols[i]][j]);
+					console.log(allData[option_symbols[i]][j]);
 				    })
 				 );
 			}                                                                  
@@ -94,7 +94,7 @@ var aprReturnMin = 6;
 var volumeMin = 5;
 var bidMin = 0.05;
 var lastTradeDateMin = -3;
-
+// debug
 Promise.all(promises).then(function() {  
 	let finalError = "Done!";
 	if (errorString) finalError = "These companies don't exist: " + errorString;
@@ -285,7 +285,9 @@ for(let i = 0; i < filterData.length; i++) {
 	document.getElementById('list').appendChild(li);
 }
 
-}); // promises.all
+});
+*/
+	// promises.all
 } // submitTicker function
 
 function D(str) { return document.getElementById(str); }
