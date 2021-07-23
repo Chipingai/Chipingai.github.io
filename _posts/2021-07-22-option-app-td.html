@@ -1,1 +1,13 @@
-hi
+<script>
+let d = new Date(Date.now() + 1000*60*60*24*12).toISOString(); 
+let queryStock = "AAPL";
+let wholeQuery = "https://api.tdameritrade.com/v1/marketdata/chains?apikey=PE0HOSE5BENVL20NNFT1XLMMYRQEN50L&symbol=" + queryStock + "&range=OTM&toDate=" + d;
+
+
+fetch(wholeQuery).then(function(response) { 
+	return response.json(); 
+}).then(function(data) { 
+	console.log(data); 
+});
+
+</script>
