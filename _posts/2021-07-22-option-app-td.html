@@ -1,10 +1,303 @@
 <div>
+  
+<span style="word-wrap:break-word" id="msg"></span>	
+<br>
+Reference List: 
+	<br><br>
+<span style="word-wrap:break-word" id="reference"></span>
+<br>
 	
-	hi
+<input onkeyup="if (event.keyCode == 27) this.value = '';
+		else if (event.keyCode == 13) {
+			event.preventDefault(); 
+			submitTicker();
+		}"
+id="tickerInput" type="text" style="margin-left:10px; margin-right:10px" autocomplete="off" placeholder="Add stock ticker..."> 
+  <div style="background-color:tan; padding-left:40px;"><span style="width:70px; display:inline-block;">Symbol</span><span style="width:70px; display:inline-block;">Price</span><span style="width:70px; display:inline-block;">Strike</span><span style="width:70px; display:inline-block;">lastPrice</span><span style="width:50px; display:inline-block;">Type</span><span style="width:70px; display:inline-block;">RET(%)</span><span style="width:70px; display:inline-block;">DIST(%)</span><span style="width:70px; display:inline-block;">Exp(days)</span><span style="width:70px; display:inline-block;">Bid</span><span style="width:70px; display:inline-block;">Ask</span>
+</div>
+  <ol style="margin-top:0px; height:500px; position:relative; overflow:auto;" id="list"></ol>
+
 </div>
 
+<script>
+  var option_symbols = ['AAPL', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'ATVI','BA','BAC','BABA', 'BIDU', 'COP', 'C','COST', 'DIS', 'FB','EA','EBAY','GOOG','GOOGL','HD','INTC','JNJ','MA','MPC','MRVL','MSFT','MU','NVDA','ORCL','PYPL','SHAK','SLB','T','TSM','TWTR','TXN','UBER','V','VLO','WFC','WISH','WMT','XOM']                     
+  var reference = "AAPL,ABT,ADBE,AMT,AMD,AMZN,ATVI,BA,BAC,BABA,BIDU,COP,C,COST,DIS,FB,EA,EBAY,GOOG,GOOGL,HD,INTC,JNJ,MA,MPC,MRVL,MSFT,MU,NVDA,ORCL,PYPL,SHAK,SLB,T,TSM,TWTR,TXN,UBER,V,VLO,WFC,WISH,WMT,XOM";
+  var base_url = 'https://query2.finance.yahoo.com/v7/finance/options/';
+
+D('reference').textContent = reference;
+D('tickerInput').value = reference;
+D('tickerInput').focus();
+	
+var withinDays = 15;
+	
+function submitTicker() {
+D('list').textContent = "";
+var errorString = "";
+var allData = {};
+	
+D('msg').textContent = "Loading...";
+option_symbols = D('tickerInput').value.replaceAll(" ", ",").split(",");
+var promises = [];  
+  
+//******* Fetch data *****
+for (let i = 0; i < option_symbols.length; i++) {
+    promises.push (  
+      fetch("https://ansyble.herokuapp.com/cors/", {headers: {'Target-URL':base_url + option_symbols[i]}, cache:'no-cache'}).then(function(response) {
+          return response.json();
+      }).then(function(data) {
+          let promises2 = [];
+	  if (data.optionChain.result[0]) {
+    		allData[option_symbols[i]] = [];
+		allData[option_symbols[i]].push(data.optionChain.result[0]);
+		//console.log(allData[option_symbols[i]][0]);
+
+		console.log("SYMBOL:",option_symbols[i], "allData[option_symbols[i]][0].expirationDates.length:",allData[option_symbols[i]][0].expirationDates.length);
+		for (let j = 1; j < allData[option_symbols[i]][0].expirationDates.length; j++) {
+
+			if (within_two_weeks(allData[option_symbols[i]][0].expirationDates[j])) {
+				  promises2.push( 
+				    fetch("https://ansyble.herokuapp.com/cors/", 
+				    {headers: {'Target-URL':base_url + option_symbols[i] + "?date=" + allData[option_symbols[i]][0].expirationDates[j]}, 
+				    cache:'no-cache'}).then(function(response) {
+					return response.json();
+				    }).then(function(remainingData) {
+					allData[option_symbols[i]].push(remainingData.optionChain.result[0]);
+					//console.log(allData[option_symbols[i]][j]);
+				    })
+				 );
+			}                                                                  
+		}
+	  } else errorString += option_symbols[i] + ", ";
+          return Promise.all(promises2);
+      }).catch(function(error) { 
+		console.log(error); 
+	      	errorString += option_symbols[i] + "(caught via catch) ";
+	})	
+    );
+}
+
+//***** Create filter data *****
+var filterData = [];
+var record = [];
+var recordLength = 5;
+var price = 0;
+var strike = 0;	
+	
+var recordSize = 0;
+var distance = 0;
+var aprReturn = 0;
+var distanceMin = 8;
+var aprReturnMin = 6;
+var volumeMin = 5;
+var bidMin = 0.05;
+var lastTradeDateMin = -3;
+
+Promise.all(promises).then(function() {  
+	let finalError = "Done!";
+	if (errorString) finalError = "These companies don't exist: " + errorString;
+	D('msg').textContent = finalError;
+	
+    for (let symbol in allData) {   	
+      price = allData[symbol][0].quote.regularMarketPrice; 
+    	for(var week=0;week<allData[symbol].length;week++){ 
+        //console.log("inside create filter data SYMBOL:",symbol);
+        dateDiff = date_diff(allData[symbol][week].options[0].calls[0].expiration);
+        //console.log("dataDiff=",dateDiff);
+		
+	distanceMin = 8;
+	aprReturnMin = 6;
+	if(week > 0){
+	  distanceMin = 10;
+	  aprReturnMin = 8;
+		
+        recordSize = 0;
+	}
+//CALL data Fetch
+        for(var call=0;call<allData[symbol][week].options[0].calls.length;call++){
+        	record = [];
+        	record.push(symbol);
+          record.push(price.toFixed(2));
+          record.push(allData[symbol][week].options[0].calls[call].strike);
+          record.push(allData[symbol][week].options[0].calls[call].lastPrice);
+          record.push('call');
+          
+          
+          aprReturn = (((allData[symbol][week].options[0].calls[call].lastPrice/allData[symbol][week].options[0].calls[call].strike)/dateDiff)*250)*100;
+          aprReturn = aprReturn.toFixed(2);
+          record.push(aprReturn);
+		
+	  distance = ((allData[symbol][week].options[0].calls[call].strike-price)/price)*100;
+          distance = distance.toFixed(2);
+          record.push(distance);
+          
+          record.push(dateDiff);
+	  record.push(allData[symbol][week].options[0].calls[call].bid);
+          record.push(allData[symbol][week].options[0].calls[call].ask);
+          
+          lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].calls[call].lastTradeDate);
+
+  	  if (allData[symbol][week].options[0].calls[call].volume > volumeMin &&  
+          	allData[symbol][week].options[0].calls[call].bid > bidMin &&
+            	lastTradeDateFromNow > lastTradeDateMin &&
+            	distance > distanceMin && aprReturn > aprReturnMin) {
+              filterData.push(record);
+              recordSize++;
+          }
+          
+        }
+        //console.log(symbol + ", call record size = " + recordSize);
+   //PUT Data Fetch     
+        recordSize = 0;
+        for(var put=0;put<allData[symbol][week].options[0].puts.length;put++){
+          record = [];
+          record.push(symbol);
+          record.push(price.toFixed(2));
+          record.push(allData[symbol][week].options[0].puts[put].strike);
+          record.push(allData[symbol][week].options[0].puts[put].lastPrice);
+          record.push('PUT')
+          
+          aprReturn = (((allData[symbol][week].options[0].puts[put].lastPrice/allData[symbol][week].options[0].puts[put].strike)/dateDiff)*250)*100;
+          aprReturn = aprReturn.toFixed(2);
+          record.push(aprReturn);
+		
+	  distance = ((price-allData[symbol][week].options[0].puts[put].strike)/price)*100;
+          distance = distance.toFixed(2);
+          record.push(distance);
+          
+          record.push(dateDiff);
+	  record.push(allData[symbol][week].options[0].puts[put].bid);
+          record.push(allData[symbol][week].options[0].puts[put].ask);
+
+          lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].puts[put].lastTradeDate);
+          
+  	  if (allData[symbol][week].options[0].puts[put].volume > volumeMin &&  
+          	allData[symbol][week].options[0].puts[put].bid > bidMin &&
+            	lastTradeDateFromNow > lastTradeDateMin &&
+            	distance > distanceMin && aprReturn > aprReturnMin) {
+              filterData.push(record);
+              recordSize++;
+          }
+        }
+        //console.log(symbol + ", put record size = " + recordSize);
+      }
+    }
+
+//a[4] is option type and a[5] is APR Return
+filterData.sort(function(a, b) {
+  return  a[4].localeCompare(b[4]) || (a[7] - b[7]) || (b[5] - a[5]);
+  //return totalCompare1(a[0], b[0]) || a[1].localeCompare(b[1]);
+});	
+ 
+//***** Load HTML filter data *****
+for(let i = 0; i < filterData.length; i++) {
+	let first = document.createElement('span');
+	let second = document.createElement('span');
+	let third = document.createElement('span');
+	let fourth = document.createElement('span');
+	let fifth = document.createElement('span');
+	let sixth = document.createElement('span');
+	let seventh = document.createElement('span');
+
+	first.style.display = "inline-block";
+	second.style.display = "inline-block";
+	third.style.display = "inline-block";
+	fourth.style.display = "inline-block";
+	fifth.style.display = "inline-block";
+	sixth.style.display = "inline-block";
+	seventh.style.display = "inline-block";
+
+	first.style.width = "70px";
+	second.style.width = "70px";
+	third.style.width = "70px";
+	fourth.style.width = "70px";
+	fifth.style.width = "50px";
+	sixth.style.width = "70px";
+	seventh.style.width = "70px";
+
+	first.textContent = filterData[i][0];
+	second.textContent = filterData[i][1];
+	third.textContent = filterData[i][2];
+	fourth.textContent = filterData[i][3];
+	fifth.textContent = filterData[i][4];
+	sixth.textContent = filterData[i][5];
+	seventh.textContent = filterData[i][6];
+	
+	let li = document.createElement("li");
+	li.appendChild(first);
+	li.appendChild(second);
+	li.appendChild(third);
+	li.appendChild(fourth);
+	li.appendChild(fifth);
+	li.appendChild(sixth);
+	li.appendChild(seventh);
+
+	let eighth = document.createElement('span');
+	eighth.style.display = "inline-block";
+	eighth.style.width = "70px";
+	eighth.textContent = filterData[i][7];
+	li.appendChild(eighth);
+	
+	let nineth = document.createElement('span');
+	nineth.style.display = "inline-block";
+	nineth.style.width = "70px";
+	nineth.textContent = filterData[i][8];
+	li.appendChild(nineth);
+	
+	let tenth = document.createElement('span');
+	tenth.style.display = "inline-block";
+	tenth.style.width = "70px";
+	tenth.textContent = filterData[i][9];
+	li.appendChild(tenth);
+	
+	if (fifth.textContent == "PUT") {
+		first.style.backgroundColor = "skyblue";
+		second.style.backgroundColor = "skyblue";
+		third.style.backgroundColor = "skyblue";
+		fourth.style.backgroundColor = "skyblue";
+		fifth.style.backgroundColor = "skyblue";
+		sixth.style.backgroundColor = "skyblue";
+		seventh.style.backgroundColor = "skyblue";
+		eighth.style.backgroundColor = "skyblue";
+		nineth.style.backgroundColor = "skyblue";
+		tenth.style.backgroundColor = "skyblue";
+	}
+
+	if (fifth.textContent == "call") {
+		first.style.backgroundColor = "cyan";
+		second.style.backgroundColor = "cyan";
+		third.style.backgroundColor = "cyan";
+		fourth.style.backgroundColor = "cyan";
+		fifth.style.backgroundColor = "cyan";
+		sixth.style.backgroundColor = "cyan";
+		seventh.style.backgroundColor = "cyan";
+		eighth.style.backgroundColor = "cyan";
+		nineth.style.backgroundColor = "cyan";
+		tenth.style.backgroundColor = "cyan";
+	}
+	
+
+	
 
 
+	document.getElementById('list').appendChild(li);
+}
+
+}); // promises.all
+} // submitTicker function
+
+function D(str) { return document.getElementById(str); }
+function true_expiration(time) {return time + 24*60*60; }
+function within_two_weeks(unix_time) {
+	let now = Date.now();
+	return (unix_time - now/1000 < withinDays*24*60*60);
+}
+function date_diff(unix_time) {
+	let now = Date.now();
+	return (Math.floor((unix_time - now/1000)/(24*60*60)) + 2);
+}
+</script>
+
+/*
 <script>
 let d = new Date(Date.now() + 1000*60*60*24*12).toISOString(); 
 let queryStock = "AAPL";
@@ -19,3 +312,4 @@ fetch(wholeQuery).then(function(response) {
 });
 
 </script>
+*/
