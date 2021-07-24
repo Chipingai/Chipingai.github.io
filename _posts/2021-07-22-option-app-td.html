@@ -119,7 +119,7 @@ for (let symbol in allData) {
           
 	distanceMin = 8;
 	aprReturnMin = 6;
-	if(lastTradeDateFromNow > 7){
+	if(daysToExpiration > 7){
 	  distanceMin = 10;
 	  aprReturnMin = 8
 	}
@@ -167,11 +167,10 @@ for (let symbol in allData) {
           
 	  distanceMin = 8;
 	  aprReturnMin = 6;
-	  if(lastTradeDateFromNow > 5){
+	  if(daysToExpiration > 5){
 	    distanceMin = 10;
 	    aprReturnMin = 8
 	  }
-	console.log(lastTradeDateFromNow,distanceMin,	aprReturnMin);
 		
           if (totalVolume > volumeMin &&  
           	bid > bidMin &&
