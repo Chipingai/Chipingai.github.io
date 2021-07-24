@@ -117,6 +117,12 @@ for (let symbol in allData) {
 	  record.push(bid);
           record.push(ask);
           
+	distanceMin = 8;
+	aprReturnMin = 6;
+	if(lastTradeDateFromNow > 7){
+	  distanceMin = 10;
+	  aprReturnMin = 8
+	}
           if (totalVolume > volumeMin &&  
 		bid > bidMin &&
 		lastTradeDateFromNow < lastTradeDateMax &&
@@ -159,6 +165,13 @@ for (let symbol in allData) {
 	  record.push(bid);
           record.push(ask);
           
+	  distanceMin = 8;
+	  aprReturnMin = 6;
+	  if(lastTradeDateFromNow > 7){
+	    distanceMin = 10;
+	    aprReturnMin = 8
+	  }
+		
           if (totalVolume > volumeMin &&  
           	bid > bidMin &&
             	lastTradeDateFromNow < lastTradeDateMax &&
@@ -167,7 +180,7 @@ for (let symbol in allData) {
               recordSize++;
        		}
       	}//for PUT stike
-	}//for expDate
+    }//for expDate
  }// for symbol
 
 //a[4] is option type and a[5] is APR Return
