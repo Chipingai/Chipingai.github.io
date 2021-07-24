@@ -49,23 +49,12 @@ for (let i = 0; i < option_symbols.length; i++) {
 	let wholeQuery = baseUrl + option_symbols[i] + "&range=OTM&toDate=" + expirationDateMax;
 	promises.push(fetch(wholeQuery).then(function(response) { 
 	return response.json(); 
-	}).then(function(data) {
+	}).then( function(data) {
 		allData[option_symbols[i]] = [];
 		allData[option_symbols[i]].push(data);
-    	//console.log(data); 
-    	//console.log(data.underlyingPrice);
-    
-    for(let expDate in data.callExpDateMap){ 
-    	//console.log(data.callExpDateMap[expDate]);
-      for(let strike in data.callExpDateMap[expDate]){
-      	//console.log(strike);
-        //console.log(data.callExpDateMap[expDate][strike]);
-        console.log(data.callExpDateMap[expDate][strike][0].symbol);
-		console.log(data.callExpDateMap[expDate][strike][0].expirationDate);
-        //console.log(data.callExpDateMap[expDate][strike][0]["strikePrice"]);
-      }
-  }
-})
+    //console.log(data); 
+    //console.log(data.underlyingPrice);
+		})
 );
 }
 
