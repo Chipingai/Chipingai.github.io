@@ -91,90 +91,96 @@ Promise.all(promises).then(function() {
 	if (errorString) finalError = "These companies don't exist: " + errorString;
 	D('msg').textContent = finalError;
 	
-    for (let symbol in allData) {   	
-      price = allData[symbol][0].quote.regularMarketPrice; 
-    	for(var week=0;week<allData[symbol].length;week++){ 
-        //console.log("inside create filter data SYMBOL:",symbol);
-        dateDiff = date_diff(allData[symbol][week].options[0].calls[0].expiration);
-        //console.log("dataDiff=",dateDiff);
-		
-	distanceMin = 8;
-	aprReturnMin = 6;
-	if(week > 0){
-	  distanceMin = 10;
-	  aprReturnMin = 8;
-		
-        recordSize = 0;
-	}
-//CALL data Fetch
-        for(var call=0;call<allData[symbol][week].options[0].calls.length;call++){
-        	record = [];
-        	record.push(symbol);
-          record.push(price.toFixed(2));
-          record.push(allData[symbol][week].options[0].calls[call].strike);
-          record.push(allData[symbol][week].options[0].calls[call].lastPrice);
-          record.push('call');
+for (let symbol in allData) {
+  price = allData[symbol][0].underlyingPrice;
+  for(let expDate in allData[symbol][0].callExpDateMap){ 
+  
+//CALL data fetch
+	recordSize = 0;
+        for(let strike in allData[symbol][0].callExpDateMap[expDate]){
+          let strikePrice = allData[symbol][0].callExpDateMap[expDate][strike][0].strikePrice;
+          let last = allData[symbol][0].callExpDateMap[expDate][strike][0].last;
+          let bid = allData[symbol][0].callExpDateMap[expDate][strike][0].bid;
+          let ask = allData[symbol][0].callExpDateMap[expDate][strike][0].ask;
+          let bidSize = allData[symbol][0].callExpDateMap[expDate][strike][0].bidSize;
+          let askSIze = allData[symbol][0].callExpDateMap[expDate][strike][0].askSize;
+          let daysToExpiration = allData[symbol][0].callExpDateMap[expDate][strike][0].daysToExpiration+1;
+          let putCall = allData[symbol][0].callExpDateMap[expDate][strike][0].putCall;
+          let totalVolume = allData[symbol][0].callExpDateMap[expDate][strike][0].totalVolume;
+          let tradeTimeInLong = Date.now() - allData[symbol][0].callExpDateMap[expDate][strike][0].tradeTimeInLong;
+          let lastTradeDateFromNow = (tradeTimeInLong/(1000*60*60*24));
+          //console.log(tradeTimeDate.toFixed(0),putCall);
           
-          
-          aprReturn = (((allData[symbol][week].options[0].calls[call].lastPrice/allData[symbol][week].options[0].calls[call].strike)/dateDiff)*250)*100;
-          aprReturn = aprReturn.toFixed(2);
-          record.push(aprReturn);
-		
-	  distance = ((allData[symbol][week].options[0].calls[call].strike-price)/price)*100;
-          distance = distance.toFixed(2);
-          record.push(distance);
-          
-          record.push(dateDiff);
-	  record.push(allData[symbol][week].options[0].calls[call].bid);
-          record.push(allData[symbol][week].options[0].calls[call].ask);
-          
-          lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].calls[call].lastTradeDate);
-
-  	  if (allData[symbol][week].options[0].calls[call].volume > volumeMin &&  
-          	allData[symbol][week].options[0].calls[call].bid > bidMin &&
-            	lastTradeDateFromNow > lastTradeDateMin &&
-            	distance > distanceMin && aprReturn > aprReturnMin) {
-              filterData.push(record);
-              recordSize++;
-          }
-          
-        }
-        //console.log(symbol + ", call record size = " + recordSize);
-   //PUT Data Fetch     
-        recordSize = 0;
-        for(var put=0;put<allData[symbol][week].options[0].puts.length;put++){
+                    
           record = [];
           record.push(symbol);
           record.push(price.toFixed(2));
-          record.push(allData[symbol][week].options[0].puts[put].strike);
-          record.push(allData[symbol][week].options[0].puts[put].lastPrice);
-          record.push('PUT')
+          record.push(strikePrice);
+          record.push(last);
+          record.push(putCall);
           
-          aprReturn = (((allData[symbol][week].options[0].puts[put].lastPrice/allData[symbol][week].options[0].puts[put].strike)/dateDiff)*250)*100;
-          aprReturn = aprReturn.toFixed(2);
-          record.push(aprReturn);
-		
-	  distance = ((price-allData[symbol][week].options[0].puts[put].strike)/price)*100;
-          distance = distance.toFixed(2);
-          record.push(distance);
+          aprReturn = (((last/strikePrice)/daysToExpiration)*250)*100;
+          record.push(aprReturn.toFixed(2));
           
-          record.push(dateDiff);
-	  record.push(allData[symbol][week].options[0].puts[put].bid);
-          record.push(allData[symbol][week].options[0].puts[put].ask);
+          distance = ((strikePrice - price)/price)*100;
+          record.push(distance.toFixed(2));
+          
+          record.push(daysToExpiration.toFixed(0));
+	  record.push(bid);
+          record.push(ask);
+          
+          if (totalVolume > volumeMin &&  
+		bid > bidMin &&
+		lastTradeDateFromNow < lastTradeDateMax &&
+		distance > distanceMin && aprReturn > aprReturnMin) {
+		      filterData.push(record);
+		      recordSize++;
+		      console.log(record);
+       	   }
+        }//for Call strike
 
-          lastTradeDateFromNow = date_diff(allData[symbol][week].options[0].puts[put].lastTradeDate);
+//PUT data fetch 
+ 	recordSize = 0;
+        for(let strike in allData[symbol][0].putExpDateMap[expDate]){
+          let strikePrice = allData[symbol][0].putExpDateMap[expDate][strike][0].strikePrice;
+          let last = allData[symbol][0].putExpDateMap[expDate][strike][0].last;
+          let bid = allData[symbol][0].putExpDateMap[expDate][strike][0].bid;
+          let ask = allData[symbol][0].putExpDateMap[expDate][strike][0].ask;
+          let bidSize = allData[symbol][0].putExpDateMap[expDate][strike][0].bidSize;
+          let askSIze = allData[symbol][0].putExpDateMap[expDate][strike][0].askSize;
+          let daysToExpiration = allData[symbol][0].putExpDateMap[expDate][strike][0].daysToExpiration+1;
+          let putCall = allData[symbol][0].putExpDateMap[expDate][strike][0].putCall;
+          let totalVolume = allData[symbol][0].putExpDateMap[expDate][strike][0].totalVolume;
+          let tradeTimeInLong = Date.now() - allData[symbol][0].putExpDateMap[expDate][strike][0].tradeTimeInLong;
+          let lastTradeDateFromNow = (tradeTimeInLong/(1000*60*60*24));
           
-  	  if (allData[symbol][week].options[0].puts[put].volume > volumeMin &&  
-          	allData[symbol][week].options[0].puts[put].bid > bidMin &&
-            	lastTradeDateFromNow > lastTradeDateMin &&
+          record = [];
+          record.push(symbol);
+          record.push(price.toFixed(2));
+          record.push(strikePrice);
+          record.push(last);
+          record.push(putCall);
+          
+          aprReturn = (((last/strikePrice)/daysToExpiration)*250)*100;
+          record.push(aprReturn.toFixed(2));
+          
+          distance = ((price - strikePrice)/price)*100;
+          record.push(distance.toFixed(2));
+          
+          record.push(daysToExpiration.toFixed(0));
+	  record.push(bid);
+          record.push(ask);
+          
+          if (totalVolume > volumeMin &&  
+          	bid > bidMin &&
+            	lastTradeDateFromNow < lastTradeDateMax &&
             	distance > distanceMin && aprReturn > aprReturnMin) {
               filterData.push(record);
               recordSize++;
-          }
-        }
-        //console.log(symbol + ", put record size = " + recordSize);
-      }
-    }
+       		}
+      	}//for PUT stike
+	}//for expDate
+ }// for symbol
 
 //a[4] is option type and a[5] is APR Return
 filterData.sort(function(a, b) {
