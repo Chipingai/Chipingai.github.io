@@ -40,10 +40,35 @@ var allData = {};
 	
 D('msg').textContent = "Loading...";
 option_symbols = D('tickerInput').value.replaceAll(" ", ",").split(",");
-var promises = [];  
-  
+var promises = [];
+let expirationDateMax = new Date(Date.now() + 1000*60*60*24*12).toISOString();
+var baseUrl = "https://api.tdameritrade.com/v1/marketdata/chains?apikey=PE0HOSE5BENVL20NNFT1XLMMYRQEN50L&symbol=" ;
+
 //******* Fetch data *****
 for (let i = 0; i < option_symbols.length; i++) {
+	let wholeQuery = baseUrl + option_symbols[i] + "&range=OTM&toDate=" + expirationDateMax;
+	promises.push(fetch(wholeQuery).then(function(response) { 
+	return response.json(); 
+	}).then(function(data) {
+		allData[option_symbols[i]] = [];
+		allData[option_symbols[i]].push(data);
+    	//console.log(data); 
+    	//console.log(data.underlyingPrice);
+    
+    for(let expDate in data.callExpDateMap){ 
+    	//console.log(data.callExpDateMap[expDate]);
+      for(let strike in data.callExpDateMap[expDate]){
+      	//console.log(strike);
+        //console.log(data.callExpDateMap[expDate][strike]);
+        console.log(data.callExpDateMap[expDate][strike][0].symbol);
+		console.log(data.callExpDateMap[expDate][strike][0].expirationDate);expirationDate
+        //console.log(data.callExpDateMap[expDate][strike][0]["strikePrice"]);
+      }
+  }
+})
+);
+
+	//debug
     promises.push (  
       fetch("https://ansyble.herokuapp.com/cors/", {headers: {'Target-URL':base_url + option_symbols[i]}, cache:'no-cache'}).then(function(response) {
           return response.json();
@@ -77,7 +102,7 @@ for (let i = 0; i < option_symbols.length; i++) {
 	      	errorString += option_symbols[i] + "(caught via catch) ";
 	})	
     );
-}
+}*/
 
 //***** Create filter data *****
 var filterData = [];
