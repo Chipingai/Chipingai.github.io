@@ -39,8 +39,7 @@ var errorString = "";
 var allData = {};
 	
 D('msg').textContent = "Loading...";
-option_symbols = D('tickerInput').value.replaceAll(" ", ",").split(",");
-option_symbols = option_symbols.toUpperCase();
+option_symbols = D('tickerInput').value.toUpperCase().replaceAll(" ", ",").split(",");
 var promises = [];
 let expirationDateMax = new Date(Date.now() + 1000*60*60*24*12).toISOString();
 var baseUrl = "https://api.tdameritrade.com/v1/marketdata/chains?apikey=PE0HOSE5BENVL20NNFT1XLMMYRQEN50L&symbol=" ;
