@@ -1,9 +1,31 @@
 <div>
-
+<span style="word-wrap:break-word" id="msg"></span>	
+<br>
+Reference List: 
+	<br><br>
+<span style="word-wrap:break-word" id="reference"></span>
+<br>
+	
+<input onkeyup="if (event.keyCode == 27) this.value = '';
+		else if (event.keyCode == 13) {
+			event.preventDefault(); 
+			submitTicker();
+		}"
+id="tickerInput" type="text" style="margin-left:10px; margin-right:10px" autocomplete="off" placeholder="Add stock ticker..."> 
+  <div style="background-color:tan; padding-left:40px;"><span style="width:70px; display:inline-block;">Symbol</span><span style="width:70px; display:inline-block;">Price</span><span style="width:70px; display:inline-block;">Strike</span><span style="width:70px; display:inline-block;">lastPrice</span><span style="width:50px; display:inline-block;">Type</span><span style="width:70px; display:inline-block;">RET(%)</span><span style="width:70px; display:inline-block;">DIST(%)</span><span style="width:70px; display:inline-block;">Exp(days)</span><span style="width:70px; display:inline-block;">Bid</span><span style="width:70px; display:inline-block;">Ask</span>
+</div>
+  <ol style="margin-top:0px; height:500px; position:relative; overflow:auto;" id="list"></ol>
 
 <div>
 
 <script>
+	
+	
+	
+	
+	
+	
+	
 function download(content, filename, contentType) {
   const a = document.createElement('a');
   const file = new Blob([content], {type: contentType});
