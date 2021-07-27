@@ -57,7 +57,7 @@ for (let i = 0; i < option_symbols.length; i++) {
 	
 Promise.all(promises).then(function() {	
    download(JSON.stringify(alldata), 'my-new-file.txt', 'text/plain');	
-}
+})
 }//submitTicker
 	
 function D(str) { return document.getElementById(str); }	
