@@ -13,7 +13,7 @@ Reference List:
 			submitTicker();
 		}"
 id="tickerInput" type="text" style="margin-left:10px; margin-right:10px" autocomplete="off" placeholder="Add stock ticker..."> 
-  <div style="background-color:tan; padding-left:40px;"><span style="width:70px; display:inline-block;">Symbol</span><span style="width:70px; display:inline-block;">Price</span><span style="width:70px; display:inline-block;">Strike</span><span style="width:70px; display:inline-block;">lastPrice</span><span style="width:50px; display:inline-block;">Type</span><span style="width:70px; display:inline-block;">RET(%)</span><span style="width:70px; display:inline-block;">DIST(%)</span><span style="width:70px; display:inline-block;">Exp(days)</span><span style="width:70px; display:inline-block;">Bid</span><span style="width:70px; display:inline-block;">Ask</span>
+  <div style="background-color:tan; padding-left:40px;"><span style="width:70px; display:inline-block;">Symbol</span><span style="width:70px; display:inline-block;">Price</span><span style="width:70px; display:inline-block;">Strike</span><span style="width:70px; display:inline-block;">lastPrice</span><span style="width:50px; display:inline-block;">Type</span><span style="width:70px; display:inline-block;">RET(%)</span><span style="width:70px; display:inline-block;">DIST(%)</span><span style="width:70px; display:inline-block;">Exp(days)</span><span style="width:70px; display:inline-block;">Bid</span><span style="width:70px; display:inline-block;">Ask</span><span style="width:70px; display:inline-block;">BidSize</span><span style="width:70px; display:inline-block;">AskSize</span>
 </div>
   <ol style="margin-top:0px; height:500px; position:relative; overflow:auto;" id="list"></ol>
 
@@ -252,6 +252,18 @@ for(let i = 0; i < filterData.length; i++) {
 	tenth.textContent = filterData[i][9];
 	li.appendChild(tenth);
 	
+	let eleventh = document.createElement('span');
+	eleventh.style.display = "inline-block";
+	eleventh.style.width = "70px";
+	eleventh.textContent = filterData[i][10];
+	li.appendChild(eleventh);
+	
+	let twelveth = document.createElement('span');
+	twelveth.style.display = "inline-block";
+	twelveth.style.width = "70px";
+	twelveth.textContent = filterData[i][11];
+	li.appendChild(twelveth);
+	
 	if (fifth.textContent == "PUT") {
 		first.style.backgroundColor = "skyblue";
 		second.style.backgroundColor = "skyblue";
@@ -263,6 +275,8 @@ for(let i = 0; i < filterData.length; i++) {
 		eighth.style.backgroundColor = "skyblue";
 		nineth.style.backgroundColor = "skyblue";
 		tenth.style.backgroundColor = "skyblue";
+		eleventh.style.backgroundColor = "skyblue";
+		twelveth.style.backgroundColor = "skyblue";
 	}
 
 	if (fifth.textContent == "CALL") {
@@ -276,6 +290,8 @@ for(let i = 0; i < filterData.length; i++) {
 		eighth.style.backgroundColor = "cyan";
 		nineth.style.backgroundColor = "cyan";
 		tenth.style.backgroundColor = "cyan";
+		eleventh.style.backgroundColor = "cyan";
+		twelveth.style.backgroundColor = "cyan";
 	}
 	
 
