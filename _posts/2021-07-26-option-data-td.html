@@ -28,9 +28,9 @@ var reference = "AMC,ABT";
 D('reference').textContent = reference;
 D('tickerInput').value = reference;
 D('tickerInput').focus();
-	
-var withinDays = 15;
 
+submitTicker();
+function submitTicker() {
 D('list').textContent = "";
 var errorString = "";
 var allData = {};
@@ -46,19 +46,21 @@ for (let i = 0; i < option_symbols.length; i++) {
 	let wholeQuery = baseUrl + option_symbols[i] + "&range=OTM&toDate=" + expirationDateMax;
 	promises.push(fetch(wholeQuery).then(function(response) { 
 	return response.json(); 
-	}).then( function(data) {
+	}).then(function(data) {
 		allData[option_symbols[i]] = [];
 		allData[option_symbols[i]].push(data);
-    console.log(data); 
-    console.log(data.underlyingPrice);
-		})
-);
-}	
+    		console.log(data); 
+    		console.log(option_symbols[i], data.underlyingPrice);
+	})//then function(data)
+);//promise.push
+}// for option_symbols.length 	
 	
+Promise.all(promises).then(function() {	
+   download(JSON.stringify(alldata), 'my-new-file.txt', 'text/plain');	
+}
+}//submitTicker
 	
-	
-	
-	
+function D(str) { return document.getElementById(str); }	
 	
 function download(content, filename, contentType) {
   const a = document.createElement('a');
@@ -71,7 +73,5 @@ function download(content, filename, contentType) {
 	URL.revokeObjectURL(a.href);
 }
   
-  
-const obj = {hello: 'world',a:"aaa"};
-download(JSON.stringify(obj), 'my-new-file.txt', 'text/plain');
+
 </script>
