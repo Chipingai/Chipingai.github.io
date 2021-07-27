@@ -19,7 +19,41 @@ id="tickerInput" type="text" style="margin-left:10px; margin-right:10px" autocom
 <div>
 
 <script>
+  //var option_symbols = ['AAPL', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'ATVI','BA','BAC','BABA', 'BIDU', 'COP', 'C','COST', 'DIS', 'FB','EA','EBAY','GOOG','GOOGL','HD','INTC','JNJ','MA','MPC','MRVL','MSFT','MU','NVDA','ORCL','PYPL','SHAK','SLB','T','TSM','TWTR','TXN','UBER','V','VLO','WFC','WISH','WMT','XOM']                     
+  //var reference = "AAPL,ABT,ADBE,AMT,AMD,AMZN,ATVI,BA,BAC,BABA,BIDU,COP,C,COST,DIS,FB,EA,EBAY,GOOG,GOOGL,HD,INTC,JNJ,MA,MPC,MRVL,MSFT,MU,NVDA,ORCL,PYPL,SHAK,SLB,T,TSM,TWTR,TXN,UBER,V,VLO,WFC,WISH,WMT,XOM";
+  	
+var option_symbols = ['AMC', 'ABT'];                    
+var reference = "AMC,ABT";
+
+D('reference').textContent = reference;
+D('tickerInput').value = reference;
+D('tickerInput').focus();
 	
+var withinDays = 15;
+
+D('list').textContent = "";
+var errorString = "";
+var allData = {};
+	
+D('msg').textContent = "Loading...";
+option_symbols = D('tickerInput').value.toUpperCase().replaceAll(" ", ",").split(",");
+var promises = [];
+let expirationDateMax = new Date(Date.now() + 1000*60*60*24*12).toISOString();
+var baseUrl = "https://api.tdameritrade.com/v1/marketdata/chains?apikey=PE0HOSE5BENVL20NNFT1XLMMYRQEN50L&symbol=" ;
+
+//******* Fetch data *****
+for (let i = 0; i < option_symbols.length; i++) {
+	let wholeQuery = baseUrl + option_symbols[i] + "&range=OTM&toDate=" + expirationDateMax;
+	promises.push(fetch(wholeQuery).then(function(response) { 
+	return response.json(); 
+	}).then( function(data) {
+		allData[option_symbols[i]] = [];
+		allData[option_symbols[i]].push(data);
+    console.log(data); 
+    console.log(data.underlyingPrice);
+		})
+);
+}	
 	
 	
 	
