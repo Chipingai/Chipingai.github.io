@@ -93,7 +93,7 @@ for (let symbol in allData) {
           let bid = allData[symbol][0].callExpDateMap[expDate][strike][0].bid;
           let ask = allData[symbol][0].callExpDateMap[expDate][strike][0].ask;
           let bidSize = allData[symbol][0].callExpDateMap[expDate][strike][0].bidSize;
-          let askSIze = allData[symbol][0].callExpDateMap[expDate][strike][0].askSize;
+          let askSize = allData[symbol][0].callExpDateMap[expDate][strike][0].askSize;
           let daysToExpiration = allData[symbol][0].callExpDateMap[expDate][strike][0].daysToExpiration+1;
           let putCall = allData[symbol][0].callExpDateMap[expDate][strike][0].putCall;
           let totalVolume = allData[symbol][0].callExpDateMap[expDate][strike][0].totalVolume;
@@ -118,6 +118,8 @@ for (let symbol in allData) {
           record.push(daysToExpiration.toFixed(0));
 	  record.push(bid);
           record.push(ask);
+	  record.push(bidSize);
+          record.push(askSize);
           
 	distanceMin = 8;
 	aprReturnMin = 6;
