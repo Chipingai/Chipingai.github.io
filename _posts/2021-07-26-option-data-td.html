@@ -73,8 +73,12 @@ Promise.all(promises).then(function() {
    promises = [];
    if( timer10min >= timerMax){
     console.log("STOP loading and down load data.")
-	clearInterval(myVar);
-   	download(JSON.stringify(allData), fileName, 'text/plain');	
+    clearInterval(myVar);
+    download(JSON.stringify(allData), fileName, 'text/plain');	
+   } else {
+	if(timer10min % 6 === 0){		//download data every hour
+    	console.log("Download data at timer10min = ", timer10min.")
+   	download(JSON.stringify(allData), fileName, 'text/plain');
    }
 })
 }//submitTicker
