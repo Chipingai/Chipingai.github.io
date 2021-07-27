@@ -68,8 +68,8 @@ for (let i = 0; i < option_symbols.length; i++) {
 }// for option_symbols.length 	
 	
 Promise.all(promises).then(function() {	
-   timer10min++;
    console.log("timer10min = ",timer10min);
+   timer10min++;
    promises = [];
    if( timer10min >= timerMax){
     console.log("STOP loading and down load data.")
