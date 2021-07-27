@@ -37,15 +37,16 @@ var dateString = displayDate();
 var timer10min = 0;
 var timerMax = 45;  	//equivalent 6.5 hours,collect data every 10 minutes
 var fileName = 'option history data '+ dateString +'.txt'
-
 var allData = {};
 
+console.log("Start recording option data..." + reference + ",  timerMax = ", timerMax.toString());	
+submitTicker();
 myVar = setInterval(submitTicker,10*60*1000);
 
 function submitTicker() {
-D('list').textContent = "";
+D('li st').textContent = "";
 var errorString = "";
-	
+
 D('msg').textContent = "Loading...";
 option_symbols = D('tickerInput').value.toUpperCase().replaceAll(" ", ",").split(",");
 var promises = [];
