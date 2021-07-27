@@ -60,7 +60,7 @@ for (let i = 0; i < option_symbols.length; i++) {
 	}).then(function(data) {
 		if (!allData[option_symbols[i]]) allData[option_symbols[i]] = [];
 		allData[option_symbols[i]].push(data);
-    		console.log(data); 
+    		//console.log(data); 
     		//console.log(option_symbols[i], data.underlyingPrice);
 	    })//then function(data)
 	);//promise.push
@@ -71,8 +71,8 @@ Promise.all(promises).then(function() {
    console.log("timer10min = ",timer10min);
    promises = [];
    if( timer10min >= timerMax){
-    console.log("STOP")
-		clearInterval(myVar);
+    console.log("STOP loading and down load data.")
+	clearInterval(myVar);
    	download(JSON.stringify(allData), fileName, 'text/plain');	
    }
 })
