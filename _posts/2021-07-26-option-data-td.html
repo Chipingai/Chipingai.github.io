@@ -19,21 +19,32 @@ id="tickerInput" type="text" style="margin-left:10px; margin-right:10px" autocom
 <div>
 
 <script>
-  //var option_symbols = ['AAPL', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'ATVI','BA','BAC','BABA', 'BIDU', 'COP', 'C','COST', 'DIS', 'FB','EA','EBAY','GOOG','GOOGL','HD','INTC','JNJ','MA','MPC','MRVL','MSFT','MU','NVDA','ORCL','PYPL','SHAK','SLB','T','TSM','TWTR','TXN','UBER','V','VLO','WFC','WISH','WMT','XOM']                     
+ //var option_symbols = ['AAPL', 'ABT', 'ADBE', 'AMT', 'AMD', 'AMZN', 'ATVI','BA','BAC','BABA', 'BIDU', 'COP', 'C','COST', 'DIS', 'FB','EA','EBAY','GOOG','GOOGL','HD','INTC','JNJ','MA','MPC','MRVL','MSFT','MU','NVDA','ORCL','PYPL','SHAK','SLB','T','TSM','TWTR','TXN','UBER','V','VLO','WFC','WISH','WMT','XOM']                     
   //var reference = "AAPL,ABT,ADBE,AMT,AMD,AMZN,ATVI,BA,BAC,BABA,BIDU,COP,C,COST,DIS,FB,EA,EBAY,GOOG,GOOGL,HD,INTC,JNJ,MA,MPC,MRVL,MSFT,MU,NVDA,ORCL,PYPL,SHAK,SLB,T,TSM,TWTR,TXN,UBER,V,VLO,WFC,WISH,WMT,XOM";
   	
-var option_symbols = ['AMC', 'ABT'];                    
-var reference = "AMC,ABT";
+//var option_symbols = ['AMC', 'SPY', 'MSFT', 'INTC', 'MRVL', 'FB', 'AAPL'];                    
+//var reference = "AMC,APY,MSFT,INTC,MRVL,FB,AAPL";
+	
+var option_symbols = ['AMC', 'SPY'];                    
+var reference = "AMC,SPY";
 
 D('reference').textContent = reference;
 D('tickerInput').value = reference;
-D('tickerInput').focus();
+D('tickerInput').focus()
 
-submitTicker();
+//******** Start collect option history data *************
+var dateString = displayDate();
+var timer10min = 0;
+var timerMax = 45;  	//equivalent 6.5 hours,collect data every 10 minutes
+var fileName = 'option history data '+ dateString +'.txt'
+
+var allData = {};
+
+myVar = setInterval(submitTicker,10*60*1000);
+
 function submitTicker() {
 D('list').textContent = "";
 var errorString = "";
-var allData = {};
 	
 D('msg').textContent = "Loading...";
 option_symbols = D('tickerInput').value.toUpperCase().replaceAll(" ", ",").split(",");
@@ -47,18 +58,38 @@ for (let i = 0; i < option_symbols.length; i++) {
 	promises.push(fetch(wholeQuery).then(function(response) { 
 	return response.json(); 
 	}).then(function(data) {
-		allData[option_symbols[i]] = [];
+		if (!allData[option_symbols[i]]) allData[option_symbols[i]] = [];
 		allData[option_symbols[i]].push(data);
     		console.log(data); 
-    		console.log(option_symbols[i], data.underlyingPrice);
-	})//then function(data)
-);//promise.push
+    		//console.log(option_symbols[i], data.underlyingPrice);
+	    })//then function(data)
+	);//promise.push
 }// for option_symbols.length 	
 	
 Promise.all(promises).then(function() {	
-   download(JSON.stringify(allData), 'my-new-file.txt', 'text/plain');	
+   timer10min++;
+   console.log("timer10min = ",timer10min);
+   promises = [];
+   if( timer10min >= timerMax){
+    console.log("STOP")
+		clearInterval(myVar);
+   	download(JSON.stringify(allData), fileName, 'text/plain');	
+   }
 })
 }//submitTicker
+
+dateString = displayDate();
+
+function displayDate() {
+var d = new Date(),
+    minutes = d.getMinutes().toString().length == 1 ? '0'+d.getMinutes() : d.getMinutes(),
+    hours = d.getHours().toString().length == 1 ? '0'+d.getHours() : d.getHours(),
+    ampm = d.getHours() >= 12 ? 'pm' : 'am',
+    months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+    days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+//return days[d.getDay()]+' '+months[d.getMonth()]+' '+d.getDate()+' '+d.getFullYear()+' '+hours+':'+minutes+ampm;
+return months[d.getMonth()]+' '+d.getDate()+' '+d.getFullYear();
+}
 	
 function D(str) { return document.getElementById(str); }	
 	
