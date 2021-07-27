@@ -35,12 +35,12 @@ D('tickerInput').focus()
 //******** Start collect option history data *************
 var dateString = displayDate();
 var timer10min = 0;
-var timerMax = 45;  	//equivalent 6.5 hours,collect data every 10 minutes
+var timerMax = 2;  	//equivalent 6.5 hours,collect data every 10 minutes
 var fileName = 'option history data '+ dateString +'.txt'
 
 var allData = {};
 
-myVar = setInterval(submitTicker,10*60*1000);
+myVar = setInterval(submitTicker,3*1000);
 
 function submitTicker() {
 D('list').textContent = "";
