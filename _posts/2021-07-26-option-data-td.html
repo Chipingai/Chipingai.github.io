@@ -79,6 +79,7 @@ Promise.all(promises).then(function() {
 	if(timer10min % 3 === 0){		//download data every half hour
     	console.log("Download data at timer10min = ", timer10min);
    	download(JSON.stringify(allData), fileName, 'text/plain');
+   	}
    }
 })
 }//submitTicker
