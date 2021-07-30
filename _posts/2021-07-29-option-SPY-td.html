@@ -41,6 +41,7 @@ submitTicker();		//The first one at timer10min = 0
 myVar = setInterval(submitTicker,10*60*1000);
 
 function submitTicker() {
+console.log("timer10min = ",timer10min, ",   now = ",PacificDateTimeString);
 D('list').textContent = "";
 var errorString = "";
 
@@ -66,7 +67,6 @@ for (let i = 0; i < option_symbols.length; i++) {
 	
 Promise.all(promises).then(function() {
    let PacificDateTimeString = new Date(Date.now() - 1000*60*60*7).toISOString();
-   console.log("timer10min = ",timer10min, ",   now = ",PacificDateTimeString);
    timer10min++;
    promises = [];
    if( timer10min >= timerMax){
