@@ -72,7 +72,6 @@ for (let i = 0; i < option_symbols.length; i++) {
 	
 Promise.all(promises).then(function() {
    let PacificDateTimeString = new Date(Date.now() - 1000*60*60*7).toISOString();
-   
    timer10min++;
    promises = [];
    if( timer10min >= timerMax){
@@ -81,7 +80,7 @@ Promise.all(promises).then(function() {
     download(JSON.stringify(allData), fileName, 'text/plain');	
    } else {
 	if(timer10min % 3 === 0){		//download data every half hour
-    	console.log("Download data at timer10min = ", timer10min);
+    	console.log("Download data at timer10min = ", timer10min, "; ", PacificDateTimeString);
    	download(JSON.stringify(allData), fileName, 'text/plain');
    	}
    }
