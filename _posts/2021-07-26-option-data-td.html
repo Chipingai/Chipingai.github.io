@@ -58,8 +58,8 @@ var baseUrl = "https://api.tdameritrade.com/v1/marketdata/chains?apikey=PE0HOSE5
 
 //******* Fetch data *****
 for (let i = 0; i < option_symbols.length; i++) {
-	console.log(option_symbols[i]);
-	displayDateTime();
+	//console.log(option_symbols[i]);
+	//displayDateTime();
 	let wholeQuery = baseUrl + option_symbols[i] + "&range=OTM&toDate=" + expirationDateMax;
 	promises.push(fetch(wholeQuery).then(function(response) { 
 	return response.json(); 
