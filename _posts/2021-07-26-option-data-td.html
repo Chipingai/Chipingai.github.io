@@ -75,7 +75,7 @@ for (let i = 0; i < option_symbols.length; i++) {
 Promise.all(promises).then(function() {
    let PacificDateTimeString = new Date(Date.now() - 1000*60*60*7).toISOString();
    timer10min++;
-   if( timer10min >= timerMax){
+   if( timer10min > timerMax){
     console.log("STOP loading and down load data.")
     clearInterval(myVar);
     download(JSON.stringify(allData), fileName, 'text/plain');	
