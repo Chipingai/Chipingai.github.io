@@ -99,12 +99,6 @@ var d = new Date(),
 return months[d.getMonth()]+' '+d.getDate()+' '+d.getFullYear();
 }
 	
-function foo() {
-    var day = new Date().getDay();
-    var hours = new Date().getHours();
-
-    document.write('day: ' + day + '  Hours : ' + hours + '</br>');
-}
 function D(str) { return document.getElementById(str); }	
 	
 function download(content, filename, contentType) {
@@ -121,5 +115,12 @@ function download(content, filename, contentType) {
 function displayDateTime() {
 	let PacificDateTimeString = new Date(Date.now() - 1000*60*60*7).toISOString();
 	console.log(PacificDateTimeString);
+}
+	
+function foo() {
+    var day = new Date().getDay();
+    var hours = new Date().getHours();
+
+    document.write('day: ' + day + '  Hours : ' + hours + '</br>');
 }
 </script>
