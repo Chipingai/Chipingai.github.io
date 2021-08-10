@@ -42,7 +42,7 @@ var allData = {};
 console.log("Start recording option data..." + reference + ",  timerMax = ", timerMax.toString() + ",  time interval = 10*60*1000 (10 min)");
     fileName = 'option data '+ dateString +'.txt';
 	console.log("Download data at timer10min = ", timer10min, "file name = ", fileName, "; ", PacificDateTimeString);
-console.log(
+
 submitTicker();		//The first one at timer10min = 0
 myVar = setInterval(submitTicker,10*60*1000);
 
