@@ -78,6 +78,7 @@ Promise.all(promises).then(function() {
    if( timer10min > timerMax){
     console.log("STOP loading and down load data.")
     clearInterval(myVar);
+    fileName = 'option data '+ dateString +'.txt'
     download(JSON.stringify(allData), fileName, 'text/plain');	
    } else if(timer10min % 3 === 0){		//download data every half hour
     	console.log("Download data at timer10min = ", timer10min, "; ", PacificDateTimeString);
