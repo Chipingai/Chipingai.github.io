@@ -70,7 +70,7 @@ var recordSize = 0;
 var distance = 0;
 var aprReturn = 0;
 var distanceMin = 6;
-var aprReturnMin = 4;
+var aprReturnMin = 5;
 var volumeMin = 5;
 var bidMin = 0.05;
 var lastTradeDateMax = 3;
@@ -124,8 +124,8 @@ for (let symbol in allData) {
 	distanceMin = 6;
 	aprReturnMin = 4;
 	if(daysToExpiration > secondWeekDistanceMin){
-	  distanceMin = distanceMin - 2;
-	  aprReturnMin = aprReturnMin - 2
+	  distanceMin = distanceMin + 2;
+	  aprReturnMin = aprReturnMin + 2
 	}
           if (totalVolume > volumeMin &&  
 		bid > bidMin &&
@@ -174,8 +174,8 @@ for (let symbol in allData) {
 	  distanceMin = 6;
 	  aprReturnMin = 4;
 	  if(daysToExpiration > secondWeekDistanceMin){
-	    distanceMin = distanceMin -2;
-	    aprReturnMin = aprReturnMin -2;
+	    distanceMin = distanceMin +2;
+	    aprReturnMin = aprReturnMin +2;
 	  }
 		
           if (totalVolume > volumeMin &&  
